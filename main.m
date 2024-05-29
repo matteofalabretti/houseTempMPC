@@ -27,25 +27,37 @@ dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, u);
 
 x0 = [280 285 290 0 0 0; 250 255 260 25 50 100; 285 290 295 25 50 100]';
 
-% for i= 1:3
-%     [tt, xx] = ode45(dxdt, [0 5000], x0(:, i));
-%     figure
-%     plot(tt, xx)
-% end
+for i= 1:3
+    [tt, xx] = ode45(dxdt, [0 5000], x0(:, i));
+    figure
+    hold on
+   
+    subplot(2,1,1)
+    plot(tt, xx(: , 1:3));
+    title("Temperature delle stanze")
+    legend(["T1" "T2" "T3"])
+    
+    subplot(2, 1,2)
+    plot(tt , xx(: , 4:6));
+    title("Potenza termica dei termosifoni")
+    legend(["Q1" "Q2" "Q3"])
+    hold off
 
-[tt, xx] = ode45(dxdt, [0 5000], x0(:, 1));
-figure
-hold on
-subplot(2,1,1)
-plot(tt, xx(: , 1:3));
-title("Temperature delle stanze")
-legend(["T1" "T2" "T3"])
+end
 
-subplot(2, 1,2)
-plot(tt , xx(: , 4:6));
-title("Potenza termica dei termosifoni")
-legend(["Q1" "Q2" "Q3"])
-hold off
+% [tt, xx] = ode45(dxdt, [0 5000], x0(:, 1));
+% figure
+% hold on
+% subplot(2,1,1)
+% plot(tt, xx(: , 1:3));
+% title("Temperature delle stanze")
+% legend(["T1" "T2" "T3"])
+% 
+% subplot(2, 1,2)
+% plot(tt , xx(: , 4:6));
+% title("Potenza termica dei termosifoni")
+% legend(["Q1" "Q2" "Q3"])
+% hold off
 
 %% Linearizzazione
 
