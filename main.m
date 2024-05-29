@@ -50,19 +50,33 @@ hold off
 
 %% Linearizzazione
 
-A_lin = [-eye(3)*k_ext, eye(3); zeros(3,3), -eye(3)./tau];
+A_11 = [ [-45 -18 18] ./C(1); [18 -47 20] ./C(2) ; [18 -20 -47] ./ C(3)];
+A_12 = eye(3) ./ C;
+A_21 = zeros(3,3);
+A_22 = -eye(3) ./tau;
+
+A_lin = [A_11 , A_12 ; A_21 , A_22];
 B_lin = [0 0 0 1/tau(1) 1/tau(2) 1/tau(3)]';
 C_lin = eye(6);
 D_lin = zeros(6,1);
 
 sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
 
+% verifica stabilità
+disp("Autovalori di della matrice A linearizzata:")
+disp(eig(A_lin));
 
-% Discretizziamo
+
+%% Discretizziamo
 Ts = 60;
 sys_discretizzato = c2d(sys_lineare, Ts);
 figure
 pzmap(sys_discretizzato)
+
+% verifica stabilità
+disp("Modulo degli autovalori di della matrice A discretizzata:")
+disp(abs(eig(sys_discretizzato.A)));
+
 
 %% analisi della raggiungibilità
 
@@ -80,5 +94,3 @@ disp("Rango matrice di raggiungibilità sitema discretizzato:")
 disp(rank(Mr_discretizzato))
 disp("Dimensioni:")
 disp(width(Mr_discretizzato) + " x " + height(Mr_discretizzato))
-
-%PUSH
