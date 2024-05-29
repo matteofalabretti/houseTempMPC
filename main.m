@@ -19,7 +19,6 @@ k = [16;18;19];
 tau = [580;520;540];
 
 
-%forse meglio mettere un vettore da 3 (abbiamo 3 ingressi)
 u = [0; 0 ; 0 ; 100 ; 100 ; 100 ];
 
 %% ODE del sistema
