@@ -84,22 +84,22 @@ Mr_lineare = ctrb(sys_lineare);
 Mr_discretizzato = ctrb(sys_discretizzato);
 
 disp("Rango matrice di raggiungibilità sitema linearizzato: " + rank(Mr_lineare))
-%disp(rank(Mr_lineare))
+
 disp("Dimensioni: " + width(Mr_lineare) + " x " + height(Mr_lineare))
-%disp(width(Mr_lineare) + " x " + height(Mr_lineare))
+
 
 disp("------------------------------------------------------------")
 disp("Rango matrice di raggiungibilità sitema discretizzato: " + rank(Mr_discretizzato))
-%disp(rank(Mr_discretizzato))
+
 disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato))
-%disp(width(Mr_discretizzato) + " x " + height(Mr_discretizzato))
+
 
 %% Definizione dei vincoli su stato e su ingressi
 %U_vinc = [0 150]; % [W]
 %X_vinc = [282.5 300]; % [K]
 
 Hx = [eye(6);-eye(6)];
-hx = [300*ones(3,1); 150*ones(3,1); 282*ones(3,1); zeros(3,1)];
+hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
 Hu = [eye(3), -eye(3)];
 hu = [150*ones(3,1); zeros(3,1)];
 
