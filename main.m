@@ -45,20 +45,6 @@ for i= 1:3
 
 end
 
-% [tt, xx] = ode45(dxdt, [0 5000], x0(:, 1));
-% figure
-% hold on
-% subplot(2,1,1)
-% plot(tt, xx(: , 1:3));
-% title("Temperature delle stanze")
-% legend(["T1" "T2" "T3"])
-% 
-% subplot(2, 1,2)
-% plot(tt , xx(: , 4:6));
-% title("Potenza termica dei termosifoni")
-% legend(["Q1" "Q2" "Q3"])
-% hold off
-
 %% Linearizzazione
 
 A_11 = [ [-45 -18 18] ./C(1); [18 -47 20] ./C(2) ; [18 -20 -47] ./ C(3)];
