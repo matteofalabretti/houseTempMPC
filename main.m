@@ -19,7 +19,7 @@ k = [16;18;19];
 tau = [580;520;540];
 
 % Definizione Obbiettivi di Controllo
-x_ref = [289 289 289 100 100 100];
+x_ref = [289; 289; 289; 100; 100; 100];
 u = [0; 0 ; 0 ; 100 ; 100 ; 100 ];
 
 
@@ -55,7 +55,7 @@ A_21 = zeros(3,3);
 A_22 = -eye(3) ./tau;
 
 A_lin = [A_11 , A_12 ; A_21 , A_22];
-B_lin = [0 0 0 1/tau(1) 1/tau(2) 1/tau(3)]';
+B_lin = [zeros(3,3); eye(3) ./ tau];
 C_lin = eye(6);
 D_lin = zeros(6,1);
 
@@ -98,12 +98,11 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 %U_vinc = [0 150]; % [W]
 %X_vinc = [282.5 300]; % [K]
 
-
-
 Hx = [eye(6);-eye(6)];
 hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
-Hu = [eye(6); -eye(6)];
-hu = [150*ones(3,1); zeros(3,1)];
+Hu = [ones(3,1); -ones(3 ,1)]; % vettore colonna così poi quando viene 
+% moltiplicato per K (vettore riga) si forma la matrice
+hu = [150*ones(3,1); zeros(3,1)]; %vettore dei vincoli
 
 %% definizione delle matrici del costo quadratico
 Q = eye(6);
