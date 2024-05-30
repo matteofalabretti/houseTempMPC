@@ -54,16 +54,16 @@ A_12 = eye(3) ./ C;
 A_21 = zeros(3,3);
 A_22 = -eye(3) ./tau;
 
-A_lin = [A_11 , A_12 ; A_21 , A_22];
-B_lin = [zeros(3,3); eye(3) ./ tau];
-C_lin = eye(6);
-D_lin = zeros(6,1);
+A = [A_11 , A_12 ; A_21 , A_22];
+B = [zeros(3,3); eye(3) ./ tau];
+C = eye(6);
+D = zeros(6,1);
 
-sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
+sys_lineare = ss(A, B, C, D);
 
 % Verifica della Stabilità del sistema lineare
 disp("Autovalori di della matrice A linearizzata:")
-disp(eig(A_lin));
+disp(eig(A));
 
 
 %% Discretizziamo
