@@ -101,8 +101,7 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 
 Hx = [eye(6);-eye(6)];
 hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
-Hu = [eye(3); -eye(3)]; % vettore colonna così poi quando viene 
-% moltiplicato per K (vettore riga) si forma la matrice
+Hu = [eye(3); -eye(3)];
 hu = [150*ones(3,1); zeros(3,1)]; %vettore dei vincoli
 
 %% definizione delle matrici del costo quadratico
