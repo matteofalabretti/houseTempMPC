@@ -48,7 +48,6 @@ for i= 1:3
 end
 
 %% Linearizzazione
-
 A_11 = [ [-45 -18 18] ./C(1); [18 -47 20] ./C(2) ; [18 -20 -47] ./ C(3)];
 A_12 = eye(3) ./ C;
 A_21 = zeros(3,3);
@@ -84,21 +83,16 @@ Mr_lineare = ctrb(sys_lineare);
 Mr_discretizzato = ctrb(sys_discretizzato);
 
 disp("Rango matrice di raggiungibilità sitema linearizzato: " + rank(Mr_lineare))
-
 disp("Dimensioni: " + width(Mr_lineare) + " x " + height(Mr_lineare))
-
 
 disp("------------------------------------------------------------")
 disp("Rango matrice di raggiungibilità sitema discretizzato: " + rank(Mr_discretizzato))
-
 disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato))
 
 
 %% Definizione dei vincoli su stato e su ingressi
 %U_vinc = [0 150]; % [W]
 %X_vinc = [282.5 300]; % [K]
-
-
 
 Hx = [eye(6);-eye(6)];
 hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
@@ -110,5 +104,8 @@ Q = eye(6);
 R = 1;
 
 %% Verifica dell'esistenza del Controllable Invariant Set
-
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, x_ref, u, Hx, hx, Hu, hu, Q, R);
+
+%% Verifica della fattibilità del n-step controllable invariant set
+Np = 10;
+[Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, A, B, Np);
