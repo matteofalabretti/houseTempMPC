@@ -98,14 +98,16 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 %U_vinc = [0 150]; % [W]
 %X_vinc = [282.5 300]; % [K]
 
+
+
 Hx = [eye(6);-eye(6)];
 hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
-Hu = [eye(3), -eye(3)];
+Hu = [eye(6); -eye(6)];
 hu = [150*ones(3,1); zeros(3,1)];
 
 %% definizione delle matrici del costo quadratico
 Q = eye(6);
-R = ones(6,1);
+R = 1;
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 
