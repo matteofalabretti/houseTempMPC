@@ -14,17 +14,18 @@ rng('default');
 T_ext = 278;
 k_ext = 9;
 
-C = [6300;4600;4200];
+c = [6300;4600;4200];
 k = [16;18;19];
 tau = [580;520;540];
 
 % Definizione Obbiettivi di Controllo
 x_ref = [289; 289; 289; 100; 100; 100];
-u = [0; 0 ; 0 ; 100 ; 100 ; 100 ];
+% u a 3 ingressi
+u = [100 ; 100 ; 100 ];
 
 
 %% ODE del sistema
-dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, u);
+dxdt = @(t,x) tempCasa(t, x, k, c, tau, T_ext, k_ext, u);
 
 % simulazione del comportamento del sistema al variare degli stati
 x0 = [280 285 290 0 0 0; 250 255 260 25 50 100; 285 290 295 25 50 100]';
@@ -49,15 +50,15 @@ end
 
 %% Linearizzazione
 
-A_11 = [ [-45 -18 18] ./C(1); [18 -47 20] ./C(2) ; [18 -20 -47] ./ C(3)];
-A_12 = eye(3) ./ C;
+A_11 = [ [-45 -18 18] ./c(1); [18 -47 20] ./c(2) ; [18 -20 -47] ./ c(3)];
+A_12 = eye(3) ./ c;
 A_21 = zeros(3,3);
 A_22 = -eye(3) ./tau;
 
 A = [A_11 , A_12 ; A_21 , A_22];
 B = [zeros(3,3); eye(3) ./ tau];
 C = eye(6);
-D = zeros(6,1);
+D = zeros(6,3);
 
 sys_lineare = ss(A, B, C, D);
 
@@ -100,7 +101,7 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 
 Hx = [eye(6);-eye(6)];
 hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
-Hu = [ones(3,1); -ones(3 ,1)]; % vettore colonna così poi quando viene 
+Hu = [eye(3); -eye(3)]; % vettore colonna così poi quando viene 
 % moltiplicato per K (vettore riga) si forma la matrice
 hu = [150*ones(3,1); zeros(3,1)]; %vettore dei vincoli
 
@@ -111,3 +112,8 @@ R = 1;
 %% Verifica dell'esistenza del Controllable Invariant Set
 
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, x_ref, u, Hx, hx, Hu, hu, Q, R);
+
+cis = Polyhedron(G , g);
+
+figure(3)
+cis.plot();
