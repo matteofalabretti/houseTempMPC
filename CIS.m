@@ -14,10 +14,10 @@ max_iteration = 10000;
 K = -dlqr(A, B, Q, R);
 
 %   Matrice A del sistema controllato con LQR
-A_lrq = A + B*K;
+A_lqr = A + B * K;
 
 %   Vincoli sullo stato e sull'ingresso (F*x <= f)
-H = [Hx;Hu*K];
+H = [Hx;Hu * K];
 h = [hx;hu + Hu*(K*x_ref - u_ref)];
 
 %   Calcolo del CIS (G*x<=g)
@@ -27,12 +27,12 @@ i = 0;
 
 while CIS_poly_prev.isEmptySet || CIS_poly_prev ~= CIS_poly_curr || i > max_iteration
     i = i+1;
-    
+
     %   Memorizza vecchio candidato
     CIS_poly_prev = CIS_poly_curr;
     
     %   Calcola nuovo candidato (G_hat * x <= g_hat)
-    G_hat = [CIS_poly_curr.A * A_lrq;H];
+    G_hat = [CIS_poly_curr.A * A_lqr;H];
     g_hat = [CIS_poly_curr.B + CIS_poly_curr.A*B*(K*x_ref - u_ref);h];
     CIS_poly_curr= Polyhedron(G_hat, g_hat);
     %minHRep(CIS_poly_curr); riduce alla rappresentazioneminima del
