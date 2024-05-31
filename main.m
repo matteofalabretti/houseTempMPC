@@ -48,15 +48,23 @@ for i= 1:3
 end
 
 %% Linearizzazione
-A_11 = [ [-45 -18 18] ./C(1); [18 -47 20] ./C(2) ; [18 -20 -47] ./ C(3)];
-A_12 = eye(3) ./ C;
-A_21 = zeros(3,3);
-A_22 = -eye(3) ./tau;
 
-A_lin = [A_11 , A_12 ; A_21 , A_22];
-B_lin = [0 0 0 1/tau(1) 1/tau(2) 1/tau(3)]';
-C_lin = eye(6);
-D_lin = zeros(6,1);
+syms T1 T2 T3 Q1 Q2 Q3 Q1r Q2r Q3r
+ 
+k12 = k(1) + (4)/(1+exp(-0.5*abs(T1 - T2)));
+k13 = k(1) + (4)/(1+exp(-0.5*abs(T1 - T3)));
+k23 = k(2) + (4)/(1+exp(-0.5*abs(T2 - T3)));
+
+T1_dot = (Q1 - k12*(T1 - T2) - k13*(T1-T3) + k_ext(T1 - T_ext))/C(1);
+T2_dot = (Q2 - k12*(T1 - T2) - k23*(T2-T3) + k_ext(T2 - T_ext))/C(2);
+T3_dot = (Q3 - k13*(T1 - T3) - k23*(T2-T3) + k_ext(T3 - T_ext))/C(3);
+
+Q1_dot = (Q1r - Q1)/tau(1);   
+Q2_dot = (Q2r - Q2)/tau(2);
+Q3_dot = (Q3r - Q3)/tau(3);
+
+%fare la jacobiana
+% https://it.mathworks.com/help/symbolic/sym.jacobian.html
 
 sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
 
