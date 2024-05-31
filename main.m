@@ -115,7 +115,7 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 %X_vinc = [282.5 300]; % [K]
 
 Hx = [eye(6);-eye(6)];
-hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
+hx = [300*ones(3,1); 150*ones(3,1); -282.5*ones(3,1); zeros(3,1)];
 Hu = [eye(3); -eye(3)];
 hu = [150*ones(3,1); zeros(3,1)];
 
@@ -128,4 +128,4 @@ R = 1;
 
 %% Verifica della fattibilità del n-step controllable invariant set
 Np = 10;
-[Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, A, B, Np);
+[Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
