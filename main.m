@@ -116,7 +116,7 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 
 Hx = [eye(6);-eye(6)];
 hx = [300*ones(3,1); 150*ones(3,1); 282.5*ones(3,1); zeros(3,1)];
-Hu = [eye(6); -eye(6)];
+Hu = [eye(3); -eye(3)];
 hu = [150*ones(3,1); zeros(3,1)];
 
 %% definizione delle matrici del costo quadratico
