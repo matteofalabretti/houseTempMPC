@@ -55,22 +55,25 @@ k12 = k(1) + (4)/(1+exp(-0.5*abs(T1 - T2)));
 k13 = k(1) + (4)/(1+exp(-0.5*abs(T1 - T3)));
 k23 = k(2) + (4)/(1+exp(-0.5*abs(T2 - T3)));
 
-T1_dot = (Q1 - k12*(T1 - T2) - k13*(T1-T3) + k_ext(T1 - T_ext))/C(1);
-T2_dot = (Q2 - k12*(T1 - T2) - k23*(T2-T3) + k_ext(T2 - T_ext))/C(2);
-T3_dot = (Q3 - k13*(T1 - T3) - k23*(T2-T3) + k_ext(T3 - T_ext))/C(3);
+T1_dot = (Q1 - k12*(T1 - T2) - k13*(T1-T3) + k_ext*(T1 - T_ext))/C(1);
+T2_dot = (Q2 - k12*(T1 - T2) - k23*(T2-T3) + k_ext*(T2 - T_ext))/C(2);
+T3_dot = (Q3 - k13*(T1 - T3) - k23*(T2-T3) + k_ext*(T3 - T_ext))/C(3);
 
 Q1_dot = (Q1r - Q1)/tau(1);   
 Q2_dot = (Q2r - Q2)/tau(2);
 Q3_dot = (Q3r - Q3)/tau(3);
 
 %fare la jacobiana
+J = jacobian([T1_dot; T2_dot; T3_dot; Q1_dot; Q2_dot; Q3_dot],[T1, T2, T3, Q1, Q2, Q3,Q1r, Q2r, Q3r]);
 % https://it.mathworks.com/help/symbolic/sym.jacobian.html
 
-sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
-
-% Verifica della Stabilità del sistema lineare
-disp("Autovalori di della matrice A linearizzata:")
-disp(eig(A_lin));
+A_lin = J(1:6, 1:6);
+B_lin = J(1:6, 7:9);
+% sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
+% 
+% % Verifica della Stabilità del sistema lineare
+% disp("Autovalori di della matrice A linearizzata:")
+% disp(eig(A_lin));
 
 
 %% Discretizziamo
