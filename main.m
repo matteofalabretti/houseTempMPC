@@ -19,8 +19,8 @@ k = [16;18;19];
 tau = [580;520;540];
 
 % Definizione Obbiettivi di Controllo
-x_ref = [289 289 289 100 100 100];
-u = [0; 0 ; 0 ; 100 ; 100 ; 100 ];
+x_ref = [289 289 289 100 100 100]';
+u = [100 100  100 ]';
 
 
 %% ODE del sistema
@@ -49,7 +49,7 @@ end
 
 %% Linearizzazione
 
-syms T1 T2 T3 Q1 Q2 Q3 Q1r Q2r Q3r
+syms T1 T2 T3 Q1 Q2 Q3 Q1r Q2r Q3r real
  
 k12 = k(1) + (4)/(1+exp(-0.5*abs(T1 - T2)));
 k13 = k(1) + (4)/(1+exp(-0.5*abs(T1 - T3)));
@@ -63,17 +63,26 @@ Q1_dot = (Q1r - Q1)/tau(1);
 Q2_dot = (Q2r - Q2)/tau(2);
 Q3_dot = (Q3r - Q3)/tau(3);
 
-%fare la jacobiana
-J = jacobian([T1_dot; T2_dot; T3_dot; Q1_dot; Q2_dot; Q3_dot],[T1, T2, T3, Q1, Q2, Q3,Q1r, Q2r, Q3r]);
-% https://it.mathworks.com/help/symbolic/sym.jacobian.html
+F([T1, T2, T3, Q1, Q2, Q3 , Q1r , Q2r, Q3r]) = [T1_dot; T2_dot; T3_dot; Q1_dot; Q2_dot; Q3_dot];
+Stati = [T1 T2 T3 Q1 Q2 Q3];
+Ingressi = [Q1r Q2r Q3r];
 
-A_lin = J(1:6, 1:6);
-B_lin = J(1:6, 7:9);
-% sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
+%jacobiane
+A(T1, T2, T3, Q1, Q2, Q3) = jacobian(F , Stati);
+B(Q1r, Q2r, Q3r) = jacobian(F , Ingressi);
+
+%Valutiamo nell'equilibrio
+A_lin = double(A(x_ref(1) , x_ref(2) , x_ref(3) ,x_ref(4) ,x_ref(5) ,x_ref(6)));
+B_lin = double(B(u(1) , u(2) , u(3)));
+
+C_lin = eye(6);
+D_lin = zeros(6,3);
+
+sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
 % 
 % % Verifica della Stabilità del sistema lineare
-% disp("Autovalori di della matrice A linearizzata:")
-% disp(eig(A_lin));
+disp("Autovalori di della matrice A linearizzata:")
+disp(eig(A_lin));
 
 
 %% Discretizziamo

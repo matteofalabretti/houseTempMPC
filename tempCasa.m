@@ -9,7 +9,7 @@ for i = 1:3
             k_esima(i,j) = k(i) + 4/(1+ exp(-0.5 * sqrt((x(i) - x(j))^2)));
         end
     end
-    x_dot(i+3) = (u(i+3) - x(i+3))/tau(i);
+    x_dot(i+3) = (u(i) - x(i+3))/tau(i);
 end
 
 x_dot(1) = (x(4) - k_esima(1,2) * (x(1) - x(2)) - k_esima(1,3) * (x(1) - x(3)) - k_ext *(x(1) - T_ext))/C(1) ;
