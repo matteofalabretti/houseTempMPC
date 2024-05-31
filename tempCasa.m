@@ -6,7 +6,7 @@ x_dot = zeros(6,1);
 for i = 1:3
     for j = 1:3
         if i ~= j  
-            k_esima(i,j) = k(i) + 4/(1+ exp(-0.5 * sqrt((x(i) - x(j))^2)));
+            k_esima(i,j) = k(i) + 4/(1+ exp(-0.5 * abs(x(i) - x(j))));
         end
     end
     x_dot(i+3) = (u(i) - x(i+3))/tau(i);

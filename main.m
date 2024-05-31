@@ -63,7 +63,7 @@ Q1_dot = (Q1r - Q1)/tau(1);
 Q2_dot = (Q2r - Q2)/tau(2);
 Q3_dot = (Q3r - Q3)/tau(3);
 
-F([T1, T2, T3, Q1, Q2, Q3 , Q1r , Q2r, Q3r]) = [T1_dot; T2_dot; T3_dot; Q1_dot; Q2_dot; Q3_dot];
+F = [T1_dot; T2_dot; T3_dot; Q1_dot; Q2_dot; Q3_dot];
 Stati = [T1 T2 T3 Q1 Q2 Q3];
 Ingressi = [Q1r Q2r Q3r];
 
