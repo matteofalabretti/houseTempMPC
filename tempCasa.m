@@ -13,7 +13,7 @@ for i = 1:3
 end
 
 x_dot(1) = (x(4) - k_esima(1,2) * (x(1) - x(2)) - k_esima(1,3) * (x(1) - x(3)) - k_ext *(x(1) - T_ext))/C(1) ;
-x_dot(2) = (x(5) - k_esima(1,2) * (x(1) - x(2)) - k_esima(2,3) * (x(2) - x(3)) - k_ext *(x(2) - T_ext))/C(2);
-x_dot(3) = (x(6) - k_esima(1,3) * (x(1) - x(3)) + k_esima(2,3) * (x(2) - x(3)) - k_ext *(x(3) - T_ext))/C(3);
+x_dot(2) = (x(5) + k_esima(1,2) * (x(1) - x(2)) - k_esima(2,3) * (x(2) - x(3)) - k_ext *(x(2) - T_ext))/C(2);
+x_dot(3) = (x(6) + k_esima(1,3) * (x(1) - x(3)) + k_esima(2,3) * (x(2) - x(3)) - k_ext *(x(3) - T_ext))/C(3);
 
 end
