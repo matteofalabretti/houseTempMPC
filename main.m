@@ -84,6 +84,17 @@ sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
 disp("Autovalori di della matrice A linearizzata:")
 disp(eig(A_lin));
 
+disp("Stati con ingresso costante a: " + u(1));
+disp(-sys_lineare.A^-1 * sys_lineare.B * u);
+
+%% Simulazione Sistema
+
+tt_sim = 0:1:4999;
+uu_sim = ones(3,5000) * 100;
+xx_0sim = [284 285 284 0 10 0]';
+
+
+lsim(sys_lineare , uu_sim , tt_sim , xx_0sim)
 
 %% Discretizziamo
 Ts = 60;
@@ -95,6 +106,19 @@ pzmap(sys_discretizzato)
 disp("Modulo degli autovalori di della matrice A discretizzata:")
 disp(abs(eig(sys_discretizzato.A)));
 
+%punto di equilibrio
+x_eq = (eye(width(sys_discretizzato.A)) - sys_discretizzato.A)^-1 * sys_discretizzato.B * [100 100 100]'; 
+
+disp("Punto di equilibiro con ingresso pari a 100:")
+disp(x_eq);
+
+%% simulazione sistema discretizzato
+
+tt_sim = 0:Ts:4999;
+uu_sim = ones(3,length(tt_sim)) * 100;
+xx_0sim = [284 285 284 0 10 0]';
+
+lsim(sys_discretizzato , uu_sim , tt_sim , xx_0sim)
 
 %% analisi della raggiungibilità
 
