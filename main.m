@@ -85,7 +85,7 @@ disp("Autovalori di della matrice A linearizzata:")
 disp(eig(A_lin));
 
 disp("Stati con ingresso costante a: " + u(1));
-disp(-sys_lineare.A^-1 * sys_lineare.B * u);
+disp(-sys_lineare.A^-1 * sys_lineare.B * zeros(3,1));
 
 %% Simulazione Sistema
 
@@ -138,17 +138,29 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 %U_vinc = [0 150]; % [W]
 %X_vinc = [282.5 300]; % [K]
 
-Hx = [eye(6);-eye(6)];
-hx = [300*ones(3,1); 150*ones(3,1); -282.5*ones(3,1); zeros(3,1)];
+Hx = [eye(6); -eye(6)];
+hx = [11*ones(3,1); 50*ones(3,1); 6.5*ones(3,1); 100*ones(3,1)];
 Hu = [eye(3); -eye(3)];
-hu = [150*ones(3,1); zeros(3,1)];
+hu = [50*ones(3,1); 100*ones(3,1)];
 
 %% definizione delle matrici del costo quadratico
 Q = eye(6);
 R = 1;
 
 %% Verifica dell'esistenza del Controllable Invariant Set
-[G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, x_ref, u, Hx, hx, Hu, hu, Q, R);
+[G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
+
+CIS_G = Polyhedron(G, g);
+CIS_G = minHRep(CIS_G);
+disp("Il Control invariant set è un insieme vuoto? " + boolean(CIS_G.isEmptySet));
+
+CIS_G_T = projection(CIS_G , 1:3);
+CIS_G_Q = projection(CIS_G , 4:6);
+
+figure
+CIS_G_T.plot();
+figure
+CIS_G_Q.plot();
 
 %% Verifica della fattibilità del n-step controllable invariant set
 Np = 10;

@@ -45,6 +45,7 @@ while  primaIterazione || CIS_poly_prev ~= CIS_poly_curr
         disp("Iterazione numero: " + i + " tempo trascorso: " + toc);
     end
 end
+disp("Iterazioni:" + i)
 disp("Tempo impiegato: " + toc);
 
 
