@@ -145,7 +145,7 @@ hu = [50*ones(3,1); 100*ones(3,1)];
 
 %% definizione delle matrici del costo quadratico
 Q = eye(6);
-R = 1;
+R = 1e-10;
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
