@@ -138,6 +138,11 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 %U_vinc = [0 150]; % [W]
 %X_vinc = [282.5 300]; % [K]
 
+% X_EQ = [289 289 289 100 100 100]; 
+
+% X_lin_T = [282.5-289 , 300-289]; % I vincoli su T dopo la linearizzazione
+% X_lin_Q = [0-100 , 150-100]; % I vincoli su Q dopo la linearizzazione
+
 Hx = [eye(6); -eye(6)];
 hx = [11*ones(3,1); 50*ones(3,1); 6.5*ones(3,1); 100*ones(3,1)];
 Hu = [eye(3); -eye(3)];
