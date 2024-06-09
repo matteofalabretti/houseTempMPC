@@ -20,11 +20,11 @@ tau = [580;520;540];
 
 % Definizione Obbiettivi di Controllo
 x_ref = [289 289 289 100 100 100]';
-u = [100 100  100 ]';
+u_ref = [100 100  100 ]';
 
 
 %% ODE del sistema
-dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, u);
+dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, u_ref);
 
 % simulazione del comportamento del sistema al variare degli stati
 x0 = [280 285 290 0 0 0; 250 255 260 25 50 100; 285 290 295 25 50 100]';
@@ -73,7 +73,7 @@ B(Q1r, Q2r, Q3r) = jacobian(F , Ingressi);
 
 %Valutiamo nell'equilibrio
 A_lin = double(A(x_ref(1) , x_ref(2) , x_ref(3) ,x_ref(4) ,x_ref(5) ,x_ref(6)));
-B_lin = double(B(u(1) , u(2) , u(3)));
+B_lin = double(B(u_ref(1) , u_ref(2) , u_ref(3)));
 
 C_lin = eye(6);
 D_lin = zeros(6,3);
@@ -135,18 +135,28 @@ disp("Dimensioni: " + width(Mr_discretizzato) + " x " + height(Mr_discretizzato)
 
 
 %% Definizione dei vincoli su stato e su ingressi
-%U_vinc = [0 150]; % [W]
-%X_vinc = [282.5 300]; % [K]
 
-% X_EQ = [289 289 289 100 100 100]; 
+T_vinc = [300 , 282.5];
+Q_vinc = [150 , 0];
+U_vinc = [150 , 0];
 
-% X_lin_T = [282.5-289 , 300-289]; % I vincoli su T dopo la linearizzazione
-% X_lin_Q = [0-100 , 150-100]; % I vincoli su Q dopo la linearizzazione
+X_vinc = [T_vinc(1)*ones(3,1);
+    Q_vinc(1)*ones(3,1);
+    T_vinc(2)*ones(3,1);
+    Q_vinc(2)*ones(3,1)]; %creazionie vincoli di massimo (prime 6 righe) e di minimo (restanti 6 righe)
+
+U_vinc = [U_vinc(1) * ones(3,1);
+    U_vinc(2)*ones(3,1)];
+
+X_vinc_lin = X_vinc - [x_ref ; x_ref]; %calcoliamo i vincoli centrati nel punto di equilibrio
+U_vinc_lin = U_vinc - [u_ref ; u_ref];
+
+
 
 Hx = [eye(6); -eye(6)];
-hx = [11*ones(3,1); 50*ones(3,1); 6.5*ones(3,1); 100*ones(3,1)];
+hx = [ones(6,1) ; -ones(6,1)] .* X_vinc_lin;
 Hu = [eye(3); -eye(3)];
-hu = [50*ones(3,1); 100*ones(3,1)];
+hu = [ones(3,1) ; -ones(3,1)] .* U_vinc_lin;
 
 %% definizione delle matrici del costo quadratico
 Q = 1.e2*eye(6);
@@ -157,7 +167,7 @@ R = 1e1;
 
 CIS_G = Polyhedron(G, g);
 CIS_G = minHRep(CIS_G);
-disp("Il Control invariant set è un insieme vuoto? " + boolean(CIS_G.isEmptySet));
+% disp("Il Control invariant set è un insieme vuoto? " + boolean(CIS_G.isEmptySet));
 
 CIS_G_T = projection(CIS_G , 1:3);
 CIS_G_Q = projection(CIS_G , 4:6);
@@ -165,7 +175,7 @@ CIS_G_Q = projection(CIS_G , 4:6);
 figure
 CIS_G_T.plot();
 title("Proiezione del CIS delle temperature nelle stanze")
-limitiTemp = [-6.5 11];
+limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
 xlim(limitiTemp)
 ylim(limitiTemp)
 zlim(limitiTemp)
@@ -173,11 +183,13 @@ zlim(limitiTemp)
 figure;
 CIS_G_Q.plot();
 title("Proiezione del CIS della potenza termica dei termosifoni")
-limitiQ = [-100 50];
+limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];
 xlim(limitiQ)
 ylim(limitiQ)
 zlim(limitiQ)
 
 %% Verifica della fattibilità del n-step controllable invariant set
+
 Np = 10;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
+
