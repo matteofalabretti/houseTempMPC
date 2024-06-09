@@ -23,7 +23,7 @@ function [H_nsteps, h_nsteps] = controllable_set(Hx, hx, Hu, hu, H_target, h_tar
     
         % Proiezioni in R^n
         temp = projection(temp, 1:n);
-        temp.minHRep();
+        temp = temp.minHRep();
     
         % Intersezione con X := {x | Hx*x <= hx}
         H_ii_steps = [temp.A;Hx];
