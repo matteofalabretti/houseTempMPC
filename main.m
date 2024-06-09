@@ -84,17 +84,17 @@ sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
 disp("Autovalori di della matrice A linearizzata:")
 disp(eig(A_lin));
 
-disp("Stati con ingresso costante a: " + u(1));
-disp(-sys_lineare.A^-1 * sys_lineare.B * zeros(3,1));
+% disp("Stati con ingresso costante a: " + u(1));
+% disp(-sys_lineare.A^-1 * sys_lineare.B * zeros(3,1));
 
 %% Simulazione Sistema
-
-tt_sim = 0:1:4999;
-uu_sim = ones(3,5000) * 100;
-xx_0sim = [284 285 284 0 10 0]';
-
-
-lsim(sys_lineare , uu_sim , tt_sim , xx_0sim)
+% 
+% tt_sim = 0:1:4999;
+% uu_sim = ones(3,5000) * 100;
+% xx_0sim = [284 285 284 0 10 0]';
+% 
+% 
+% lsim(sys_lineare , uu_sim , tt_sim , xx_0sim)
 
 %% Discretizziamo
 Ts = 60;
@@ -107,18 +107,18 @@ disp("Modulo degli autovalori di della matrice A discretizzata:")
 disp(abs(eig(sys_discretizzato.A)));
 
 %punto di equilibrio
-x_eq = (eye(width(sys_discretizzato.A)) - sys_discretizzato.A)^-1 * sys_discretizzato.B * [100 100 100]'; 
-
-disp("Punto di equilibiro con ingresso pari a 100:")
-disp(x_eq);
+% x_eq = (eye(width(sys_discretizzato.A)) - sys_discretizzato.A)^-1 * sys_discretizzato.B * [100 100 100]'; 
+% 
+% disp("Punto di equilibiro con ingresso pari a 100:")
+% disp(x_eq);
 
 %% simulazione sistema discretizzato
-
-tt_sim = 0:Ts:4999;
-uu_sim = ones(3,length(tt_sim)) * 100;
-xx_0sim = [284 285 284 0 10 0]';
-
-lsim(sys_discretizzato , uu_sim , tt_sim , xx_0sim)
+% 
+% tt_sim = 0:Ts:4999;
+% uu_sim = ones(3,length(tt_sim)) * 100;
+% xx_0sim = [284 285 284 0 10 0]';
+% 
+% lsim(sys_discretizzato , uu_sim , tt_sim , xx_0sim)
 
 %% analisi della raggiungibilità
 
@@ -144,8 +144,8 @@ Hu = [eye(3); -eye(3)];
 hu = [50*ones(3,1); 100*ones(3,1)];
 
 %% definizione delle matrici del costo quadratico
-Q = eye(6);
-R = 1e-10;
+Q = 1.e2*eye(6);
+R = 1e1;
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
@@ -159,8 +159,19 @@ CIS_G_Q = projection(CIS_G , 4:6);
 
 figure
 CIS_G_T.plot();
-figure
+title("Proiezione del CIS delle temperature nelle stanze")
+limitiTemp = [-6.5 11];
+xlim(limitiTemp)
+ylim(limitiTemp)
+zlim(limitiTemp)
+
+figure;
 CIS_G_Q.plot();
+title("Proiezione del CIS della potenza termica dei termosifoni")
+limitiQ = [-100 50];
+xlim(limitiQ)
+ylim(limitiQ)
+zlim(limitiQ)
 
 %% Verifica della fattibilità del n-step controllable invariant set
 Np = 10;
