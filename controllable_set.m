@@ -28,11 +28,15 @@ function [H_nsteps, h_nsteps] = controllable_set(Hx, hx, Hu, hu, H_target, h_tar
         % Intersezione con X := {x | Hx*x <= hx}
         H_ii_steps = [temp.A;Hx];
         h_ii_steps = [temp.b;hx];
+
+        disp("Fine Calcolo Passo " + ii )
     
     end
     disp("Tempo impiegato: " + toc);
 
     H_nsteps = H_ii_steps;
     h_nsteps = h_ii_steps;
+
+    
     
 end

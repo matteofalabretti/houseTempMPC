@@ -190,7 +190,7 @@ zlim(limitiQ)
 
 %% Verifica della fattibilità del n-step controllable invariant set
 
-Np = 10;
+Np = 5;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
 %%
