@@ -193,3 +193,26 @@ zlim(limitiQ)
 Np = 10;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
+%%
+Np_step = Polyhedron(Np_steps_H , Np_steps_h);
+Np_step = Np_step.minHRep();
+
+Np_steps_T = projection(Np_step , 1:3);
+Np_steps_Q = projection(Np_step , 4:6);
+
+figure
+Np_steps_T.plot();
+title("Proiezione del dominio di attrazione delle temperature nelle stanze")
+limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
+xlim(limitiTemp)
+ylim(limitiTemp)
+zlim(limitiTemp)
+
+figure;
+Np_steps_Q.plot();
+title("Proiezione del dominio di attrazione della potenza termica dei termosifoni")
+limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];
+xlim(limitiQ)
+ylim(limitiQ)
+zlim(limitiQ)
+

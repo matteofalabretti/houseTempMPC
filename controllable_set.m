@@ -16,9 +16,9 @@ function [H_nsteps, h_nsteps] = controllable_set(Hx, hx, Hu, hu, H_target, h_tar
     % candidato iniziale
     H_ii_steps = H_target;
     h_ii_steps = h_target;
-    
+    tic;
     for ii = 1:N
-        % Computazione in R^(n+m)
+        % Calcoliamo il set ad un passo rispetto a quello precedente
         temp = Polyhedron('A', [H_ii_steps*A, H_ii_steps*B; zeros(size(Hu, 1), n), Hu], 'b', [h_ii_steps;hu]);
     
         % Proiezioni in R^n
@@ -30,7 +30,8 @@ function [H_nsteps, h_nsteps] = controllable_set(Hx, hx, Hu, hu, H_target, h_tar
         h_ii_steps = [temp.b;hx];
     
     end
-    
+    disp("Tempo impiegato: " + toc);
+
     H_nsteps = H_ii_steps;
     h_nsteps = h_ii_steps;
     
