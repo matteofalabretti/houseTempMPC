@@ -228,7 +228,7 @@ plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "*" , MarkerSize=10)
 
 [A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal , G_cal , g_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np , G , g);
 
-n_sim = 50;
+n_sim = 100;
 x0_new = x0_centrato;
 
 %calcoliamo H
@@ -241,6 +241,7 @@ A_qp = [B_cal; %vincolo di massimo dello stato
         -eye(width(B_cal)); % vincolo di minimo dell'ingresso 
         G * B_cal_n]; % Spero che sia questo il vincolo
 
+% definizione vincoli du ingresso e stati centrati
 X_max = [];
 X_min = [];
 U_max = [];
@@ -257,8 +258,9 @@ storia_x = [];
 storia_u = [];
 
 for i = 1:n_sim
-    
+    % salvo la precedente configurazione degli stati
     storia_x(1:6 , i) = x0_new;
+
     %calcoliamo f e b_qp
     f = 2* x0_new' * A_cal' * Q_cal * B_cal;
     b_qp = [X_max - A_cal * x0_new;
@@ -296,4 +298,22 @@ title("Evoluzione della potenza dei termosifoni")
 figure
 plot(1:n_sim , storia_u)
 title("Evoluzione degli ingressi")
+
+%% simulazione a tempo continuo più controllo
+
+htt=[];
+hxx = [];
+
+
+for i = 1:100
+    if i== 1
+        [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + storia_u(1:3,i)), [60*(i-1) 60*i], [284 285 284 0 10 0]);
+    end
+
+    [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + storia_u(1:3,i)), [60*(i-1) 60*i], xx(height(xx),1:6));
+    htt = [htt;tt];
+    hxx = [hxx;xx];
+end
+
+plot(htt, hxx);
 
