@@ -221,8 +221,8 @@ zlim(limitiQ)
 
 [A_cal , B_cal,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np);
 
-n_sim = 83;
-x0_new =[284 285 284 0 10 0]';
+n_sim = 50;
+x0_new =[284 285 284 0 10 0]' - x_ref;
 
 %calcoliamo H
 H = 2 * (B_cal' * Q_cal * B_cal + R_cal);
@@ -272,9 +272,6 @@ for i = 1:n_sim
 end
 
 %% plot della simulazione
-
-
-
 
 plot(1:n_sim , storia_x(1:3 , :))
 title("Evoluzione della temperatura")
