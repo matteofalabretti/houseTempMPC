@@ -193,7 +193,7 @@ zlim(limitiQ)
 Np = 7;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
-%%
+%% Plot Controllable_N_set
 Np_step = Polyhedron(Np_steps_H , Np_steps_h);
 Np_step = Np_step.minHRep();
 
