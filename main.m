@@ -216,3 +216,75 @@ xlim(limitiQ)
 ylim(limitiQ)
 zlim(limitiQ)
 
+
+%% simulazione del sistema
+
+[A_cal , B_cal,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np);
+
+n_sim = 83;
+x0_new =[284 285 284 0 10 0]';
+
+%calcoliamo H
+H = 2 * (B_cal' * Q_cal * B_cal + R_cal);
+
+% impostiamo i vincoli
+A_qp = [B_cal; %vincolo di massimo dello stato
+        -B_cal; %vincolo di minimo dello stato
+        eye(width(B_cal)); % vincolo di massimo dell'ingresso
+        -eye(width(B_cal))]; % vincolo di minimo dell'ingresso %vincolo terminale dello stato
+
+X_max = [];
+X_min = [];
+U_max = [];
+U_min = [];
+
+for i = 1:Np
+   X_max = [X_max; X_vinc_lin(1:6)];
+   X_min = [X_min; X_vinc_lin(7:end)];
+   U_max = [U_max; U_vinc_lin(1:3)];
+   U_min = [U_min; U_vinc_lin(4:end)];
+end
+
+storia_x = [];
+storia_u = [];
+
+for i = 1:n_sim
+    
+    storia_x(1:6 , i) = x0_new;
+    %calcoliamo f e b_qp
+    f = 2* x0_new' * A_cal' * Q_cal * B_cal;
+    b_qp = [X_max - A_cal * x0_new;
+            -X_min + A_cal * x0_new;
+            U_max;
+            -U_min];%manca il vincolo terminale
+    
+    % %plot dei vincoli
+    % Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
+    % Vinc_U_primo = Vinc_U.projection(1:3);
+    % Vinc_U_primo.plot();
+
+    % troviamo il minimo
+    [u , ~ , flag] = quadprog(H , f , A_qp , b_qp);
+    u_0 = u(1:3);
+    storia_u(1:3 , i) = u_0; 
+    % applichiamo il primo passo
+    x0_new = sys_discretizzato.A * x0_new + sys_discretizzato.B * u_0; % applichiamo solo il primo passo
+end
+
+%% plot della simulazione
+
+
+
+
+plot(1:n_sim , storia_x(1:3 , :))
+title("Evoluzione della temperatura")
+
+figure
+plot(1:n_sim , storia_x(4:end , :))
+title("Evoluzione della potenza dei termosifoni")
+
+figure
+plot(1:n_sim , storia_u)
+title("Evoluzione degli ingressi")
+
+
