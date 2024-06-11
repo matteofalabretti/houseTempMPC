@@ -219,12 +219,8 @@ zlim(limitiQ)
 
 %% Formulazione del problema
 
-[A_cal , B_cal,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np);
+[A_cal , B_cal,  Q_cal , R_cal , Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np , Hx , hx , Hu , hu, G , g);
 
-
-% Inserimento vincoli sullo stato terminale
-Hx_cal = [Hx_cal; zeros(height(G) , width(Hx_cal))];
 
 % H = 2 * (B_cal' * Q * B_cal + R);
 % f = 2* x0 
-

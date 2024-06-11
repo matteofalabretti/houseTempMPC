@@ -34,8 +34,20 @@ function [A_cal , B_cal , Q_cal , R_cal , Hx_cal , hx_cal , Hu_cal , hu_cal] = C
     Hx_cal = diagonaleEccettoUltima(Hx , G , N);
     
     %Cacloclo di hx_cal
-    
+    hx_cal = [];
+    for i = 1:N-1
+       hx_cal = [hx_cal;hx];
+    end
+    hx_cal = [hx_cal;g];
 
+    % Calcolo di Hu_cal
+    Hu_cal = kron(eye(N-1) , Hu);
+
+    %calcolo di hu_cal
+    hu_cal = [];
+    for i = 1:N-1
+       hu_cal = [hu_cal;hu];
+    end
 end
 
 %Funzione che crea una matrice diagonale a blocchi con tutti i blocchi
