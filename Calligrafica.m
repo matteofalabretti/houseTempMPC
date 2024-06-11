@@ -1,4 +1,4 @@
-function [A_cal , B_cal , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(A , B , Q , R , S , N , Hx , hx , Hu , hu , G , g)
+function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(A , B , Q , R , S , N , G , g , Hx , hx , Hu , hu)
     % Funzione che calcola le matrici nella forma raccolta
     
     % Inizzializzazioni matrici
@@ -6,8 +6,12 @@ function [A_cal , B_cal , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_c
     B_cal = [];
     
     for i = 1:N
+        mat = A^i;
         % Calcolo di A_cal
-        A_cal = [A_cal;A^i];
+        A_cal = [A_cal;mat];
+        if i == N
+            A_cal_n = mat;
+        end
     end
     
     % Calcolo di B cal
@@ -20,8 +24,13 @@ function [A_cal , B_cal , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_c
                 riga_B_cal= [riga_B_cal , A^(i-j) * B];
             end
         end
-    
+        
         B_cal = [B_cal ; riga_B_cal];
+    
+        if i == N
+            B_cal_n = riga_B_cal;
+        end
+
     end
     
     %Calcolo di Q_cal
@@ -32,14 +41,25 @@ function [A_cal , B_cal , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_c
     
     %calcolo di G cal
     matrici = {};
-    for i = i:N
-        if(i = N-1)
+    for i = 1:N
+        if i == N-1
             matrici{i} = G;
         else
-            matrici{i} = eye();
+            matrici{i} = eye(height(A));
         end
     end
-    G_cal = blkdiag(matrici(:));
+    G_cal = blkdiag(matrici{:});
+
+    %Calcolo di g_cal
+    g_cal = [];
+    for i = 1:N
+        if i == N-1
+            mat = g;
+        else
+            mat = zeros(height(A) , 1);
+        end
+        g_cal = [g_cal ; mat];
+    end
 
     %% Non serve
     % %Cacloclo di Hx_cal

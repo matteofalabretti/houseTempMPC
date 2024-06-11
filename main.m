@@ -190,7 +190,7 @@ zlim(limitiQ)
 
 %% Verifica della fattibilità del n-step controllable invariant set
 
-Np = 5;
+Np = 10;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
 %%
@@ -219,7 +219,7 @@ zlim(limitiQ)
 
 %% simulazione del sistema
 
-[A_cal , B_cal,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np);
+[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal , G_cal , g_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np , G , g);
 
 n_sim = 50;
 x0_new =[284 285 284 0 10 0]' - x_ref;
@@ -231,7 +231,8 @@ H = 2 * (B_cal' * Q_cal * B_cal + R_cal);
 A_qp = [B_cal; %vincolo di massimo dello stato
         -B_cal; %vincolo di minimo dello stato
         eye(width(B_cal)); % vincolo di massimo dell'ingresso
-        -eye(width(B_cal))]; % vincolo di minimo dell'ingresso %vincolo terminale dello stato
+        -eye(width(B_cal)); % vincolo di minimo dell'ingresso 
+        G * B_cal_n]; % Spero che sia questo il vincolo
 
 X_max = [];
 X_min = [];
@@ -256,15 +257,17 @@ for i = 1:n_sim
     b_qp = [X_max - A_cal * x0_new;
             -X_min + A_cal * x0_new;
             U_max;
-            -U_min];%manca il vincolo terminale
+            -U_min;
+            g - G * A_cal_n * x0_new];% spero che sia questo il vincolo terminale
     
-    % %plot dei vincoli
-    % Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
-    % Vinc_U_primo = Vinc_U.projection(1:3);
-    % Vinc_U_primo.plot();
+    % plot dei vincoli
+    figure
+    Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
+    Vinc_U_primo = Vinc_U.projection(1:3);
+    Vinc_U_primo.plot();
 
     % troviamo il minimo
-    [u , ~ , flag] = quadprog(H , f , A_qp , b_qp , );
+    [u , ~ , flag] = quadprog(H , f , A_qp , b_qp);
     u_0 = u(1:3);
     storia_u(1:3 , i) = u_0; 
 
