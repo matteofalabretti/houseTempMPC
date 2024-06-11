@@ -193,7 +193,7 @@ zlim(limitiQ)
 Np = 7;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
-%%
+%% Plot Controllable_N_set
 Np_step = Polyhedron(Np_steps_H , Np_steps_h);
 Np_step = Np_step.minHRep();
 
@@ -228,7 +228,7 @@ plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "*" , MarkerSize=10)
 
 [A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal , G_cal , g_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np , G , g);
 
-n_sim = 50;
+n_sim = 100;
 x0_new = x0_centrato;
 
 %calcoliamo H
