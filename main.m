@@ -190,7 +190,7 @@ zlim(limitiQ)
 
 %% Verifica della fattibilità del n-step controllable invariant set
 
-Np = 10;
+Np = 7;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
 %%
@@ -200,6 +200,8 @@ Np_step = Np_step.minHRep();
 Np_steps_T = projection(Np_step , 1:3);
 Np_steps_Q = projection(Np_step , 4:6);
 
+x0_centrato = [284 285 284 0 10 0]' - x_ref;
+
 figure
 Np_steps_T.plot();
 title("Proiezione del dominio di attrazione delle temperature nelle stanze")
@@ -207,6 +209,8 @@ limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
 xlim(limitiTemp)
 ylim(limitiTemp)
 zlim(limitiTemp)
+hold on
+plot3(x0_centrato(1) ,x0_centrato(2), x0_centrato(3))
 
 figure;
 Np_steps_Q.plot();
@@ -215,6 +219,9 @@ limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];
 xlim(limitiQ)
 ylim(limitiQ)
 zlim(limitiQ)
+hold on
+plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "*" , MarkerSize=10)
+
 
 
 %% simulazione del sistema
@@ -222,7 +229,7 @@ zlim(limitiQ)
 [A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal , G_cal , g_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np , G , g);
 
 n_sim = 50;
-x0_new =[284 285 284 0 10 0]' - x_ref;
+x0_new = x0_centrato;
 
 %calcoliamo H
 H = 2 * (B_cal' * Q_cal * B_cal + R_cal);
@@ -260,11 +267,11 @@ for i = 1:n_sim
             -U_min;
             g - G * A_cal_n * x0_new];% spero che sia questo il vincolo terminale
     
-    % plot dei vincoli
-    figure
-    Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
-    Vinc_U_primo = Vinc_U.projection(1:3);
-    Vinc_U_primo.plot();
+    % % plot dei vincoli
+    % figure
+    % Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
+    % Vinc_U_primo = Vinc_U.projection(1:3);
+    % Vinc_U_primo.plot();
 
     % troviamo il minimo
     [u , ~ , flag] = quadprog(H , f , A_qp , b_qp);
