@@ -160,7 +160,7 @@ hu = [ones(3,1) ; -ones(3,1)] .* U_vinc_lin;
 
 %% definizione delle matrici del costo quadratico
 Q = 1.e2*eye(6);
-R = 1e1;
+R = 1e1*eye(3);
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
@@ -222,5 +222,3 @@ zlim(limitiQ)
 [A_cal , B_cal,  Q_cal , R_cal , Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np , Hx , hx , Hu , hu, G , g);
 
 
-% H = 2 * (B_cal' * Q * B_cal + R);
-% f = 2* x0 
