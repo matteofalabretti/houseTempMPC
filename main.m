@@ -160,7 +160,7 @@ hu = [ones(3,1) ; -ones(3,1)] .* U_vinc_lin;
 
 %% definizione delle matrici del costo quadratico
 Q = 1.e2*eye(6);
-R = 1e1;
+R = 1e1*eye(3);
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
@@ -286,5 +286,4 @@ title("Evoluzione della potenza dei termosifoni")
 figure
 plot(1:n_sim , storia_u)
 title("Evoluzione degli ingressi")
-
 
