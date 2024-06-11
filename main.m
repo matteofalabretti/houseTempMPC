@@ -15,6 +15,7 @@ T_ext = 278;
 k_ext = 9;
 
 C = [6300;4600;4200];
+
 k = [16;18;19];
 tau = [580;520;540];
 
@@ -193,7 +194,7 @@ zlim(limitiQ)
 Np = 7;
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
 
-%% Plot Controllable_N_set
+%%
 Np_step = Polyhedron(Np_steps_H , Np_steps_h);
 Np_step = Np_step.minHRep();
 
@@ -278,6 +279,7 @@ for i = 1:n_sim
     % troviamo il minimo
     [u , ~ , flag] = quadprog(H , f , A_qp , b_qp);
     u_0 = u(1:3);
+    
     storia_u(1:3 , i) = u_0; 
 
     % applichiamo il primo passo
@@ -303,17 +305,29 @@ title("Evoluzione degli ingressi")
 
 htt=[];
 hxx = [];
+u_online = [];
+x_ini = [284 285 284 0 10 0]';
 
 
 for i = 1:100
-    if i== 1
-        [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + storia_u(1:3,i)), [60*(i-1) 60*i], [284 285 284 0 10 0]);
+
+
+    if i == 1
+        x_run = x_ini-x_ref(1:6);
+    else
+        x_run = xx(height(xx), 1:6)'-x_ref(1:6);
     end
 
-    [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + storia_u(1:3,i)), [60*(i-1) 60*i], xx(height(xx),1:6));
+    controlAction = MPC(x_run, sys_discretizzato, Q, R, Np, G,g, X_vinc_lin, U_vinc_lin);
+    u_online = [u_online;controlAction(1:3)];
+    [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + controlAction(1:3)), [60*(i-1) 60*i], x_run+x_ref);
     htt = [htt;tt];
     hxx = [hxx;xx];
-end
 
+end
+figure
 plot(htt, hxx);
+
+figure
+plot(u_online+[100 100 100])
 
