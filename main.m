@@ -264,11 +264,13 @@ for i = 1:n_sim
     % Vinc_U_primo.plot();
 
     % troviamo il minimo
-    [u , ~ , flag] = quadprog(H , f , A_qp , b_qp);
+    [u , ~ , flag] = quadprog(H , f , A_qp , b_qp , );
     u_0 = u(1:3);
     storia_u(1:3 , i) = u_0; 
+
     % applichiamo il primo passo
     x0_new = sys_discretizzato.A * x0_new + sys_discretizzato.B * u_0; % applichiamo solo il primo passo
+
 end
 
 %% plot della simulazione

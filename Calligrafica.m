@@ -1,4 +1,4 @@
-function [A_cal , B_cal , Q_cal , R_cal , Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(A , B , Q , R , S , N , Hx , hx , Hu , hu , G , g)
+function [A_cal , B_cal , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(A , B , Q , R , S , N , Hx , hx , Hu , hu , G , g)
     % Funzione che calcola le matrici nella forma raccolta
     
     % Inizzializzazioni matrici
@@ -30,6 +30,17 @@ function [A_cal , B_cal , Q_cal , R_cal , Hx_cal , hx_cal , Hu_cal , hu_cal] = C
     %Calcolo di R cal
     R_cal = kron(eye(N) , R );
     
+    %calcolo di G cal
+    matrici = {};
+    for i = i:N
+        if(i = N-1)
+            matrici{i} = G;
+        else
+            matrici{i} = eye();
+        end
+    end
+    G_cal = blkdiag(matrici(:));
+
     %% Non serve
     % %Cacloclo di Hx_cal
     % Hx_cal = diagonaleEccettoUltima(Hx , G , N);
