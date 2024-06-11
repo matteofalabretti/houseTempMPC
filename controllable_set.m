@@ -17,7 +17,7 @@ function [H_nsteps, h_nsteps] = controllable_set(Hx, hx, Hu, hu, H_target, h_tar
     H_ii_steps = H_target;
     h_ii_steps = h_target;
     tic;
-    for ii = 1:N
+    for ii = 1:N 
         % Calcoliamo il set ad un passo rispetto a quello precedente
         temp = Polyhedron('A', [H_ii_steps*A, H_ii_steps*B; zeros(size(Hu, 1), n), Hu], 'b', [h_ii_steps;hu]);
     
