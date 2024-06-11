@@ -143,7 +143,7 @@ U_vinc = [150 , 0];
 X_vinc = [T_vinc(1)*ones(3,1);
     Q_vinc(1)*ones(3,1);
     T_vinc(2)*ones(3,1);
-    Q_vinc(2)*ones(3,1)]; %creazionie vincoli di massimo (prime 6 righe) e di minimo (restanti 6 righe)
+    Q_vinc(2)*ones(3,1)]; %creazione vincoli di massimo (prime 6 righe) e di minimo (restanti 6 righe)
 
 U_vinc = [U_vinc(1) * ones(3,1);
     U_vinc(2)*ones(3,1)];
@@ -285,6 +285,7 @@ end
 
 %% plot della simulazione
 
+figure
 plot(1:n_sim , storia_x(1:3 , :))
 title("Evoluzione della temperatura")
 
