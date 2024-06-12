@@ -290,15 +290,16 @@ end
 %% plot della simulazione
 
 figure
-plot(1:n_sim , storia_x(1:3 , :))
+subplot(2 , 1, 1)
+plot(1:n_sim , storia_x(1:3 , :) + x_ref(1:3))
 title("Evoluzione della temperatura")
 
-figure
-plot(1:n_sim , storia_x(4:end , :))
+subplot(2 , 1, 2)
+plot(1:n_sim , storia_x(4:end , :) + x_ref(4:end))
 title("Evoluzione della potenza dei termosifoni")
 
 figure
-plot(1:n_sim , storia_u)
+plot(1:n_sim , storia_u + u_ref)
 title("Evoluzione degli ingressi")
 
 %% simulazione a tempo continuo più controllo
@@ -325,9 +326,19 @@ for i = 1:100
     hxx = [hxx;xx];
 
 end
+
+%% Plot
 figure
-plot(htt, hxx);
+subplot(2 , 1 , 1)
+plot(htt, hxx(: , 1:3)');
+title("Temperature")
+
+subplot(2 , 1 , 2)
+plot(htt, hxx(: , 4:6)')
+title("Potenza Termosifoni")
+
+
 
 figure
 plot(u_online+[100 100 100])
-
+title("Ingressi")
