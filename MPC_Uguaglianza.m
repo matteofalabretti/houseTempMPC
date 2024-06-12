@@ -1,4 +1,4 @@
-function controlAction = MPC(x_attuale, sys, Q, R, Window, G, g, Vinc_X, Vinc_U)
+function controlAction = MPC_Uguaglianza(x_attuale, sys, Q, R, Window, G, g, Vinc_X, Vinc_U)
 
 [A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , Q , Window);
 
@@ -12,7 +12,9 @@ A_qp = [B_cal; %vincolo di massimo dello stato
         -B_cal; %vincolo di minimo dello stato
         eye(width(B_cal)); % vincolo di massimo dell'ingresso
         -eye(width(B_cal)); % vincolo di minimo dell'ingresso 
-        G * B_cal_n]; % Spero che sia questo il vincolo
+        ]; 
+
+A_eq = G * B_cal_n;
 
 % definizione vincoli du ingresso e stati centrati
 X_max = [];
@@ -32,9 +34,10 @@ end
     b_qp = [X_max - A_cal * x_attuale;
             -X_min + A_cal * x_attuale;
             U_max;
-            -U_min;
-            g - G * A_cal_n * x_attuale];% spero che sia questo il vincolo terminale
+            -U_min];
     
+    b_eq = g - G * A_cal_n * x_attuale;
+
     % % plot dei vincoli
     % figure
     % Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
@@ -42,6 +45,6 @@ end
     % Vinc_U_primo.plot();
 
     % troviamo il minimo
-    [controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp);
+    [controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp , A_eq , b_eq);
 
 end

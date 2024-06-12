@@ -1,4 +1,4 @@
-function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal , G_cal , g_cal,  Hx_cal , hx_cal , Hu_cal , hu_cal] = Calligrafica(A , B , Q , R , S , N , G , g , Hx , hx , Hu , hu)
+function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal] = Calligrafica(A , B , Q , R , S , N)
     % Funzione che calcola le matrici nella forma raccolta
     
     % Inizzializzazioni matrici
@@ -39,46 +39,28 @@ function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal , G_cal , g_cal,  Hx_
     %Calcolo di R cal
     R_cal = kron(eye(N) , R );
     
-    %calcolo di G cal
-    matrici = {};
-    for i = 1:N
-        if i == N-1
-            matrici{i} = G;
-        else
-            matrici{i} = eye(height(A));
-        end
-    end
-    G_cal = blkdiag(matrici{:});
-
-    %Calcolo di g_cal
-    g_cal = [];
-    for i = 1:N
-        if i == N-1
-            mat = g;
-        else
-            mat = zeros(height(A) , 1);
-        end
-        g_cal = [g_cal ; mat];
-    end
 
     %% Non serve
-    % %Cacloclo di Hx_cal
-    % Hx_cal = diagonaleEccettoUltima(Hx , G , N);
-    % 
-    % %Cacloclo di hx_cal
-    % hx_cal = [];
-    % for i = 1:N-1
-    %    hx_cal = [hx_cal;hx];
+    % %calcolo di G cal
+    % matrici = {};
+    % for i = 1:N
+    %     if i == N-1
+    %         matrici{i} = G;
+    %     else
+    %         matrici{i} = eye(height(A));
+    %     end
     % end
-    % hx_cal = [hx_cal;g];
+    % G_cal = blkdiag(matrici{:});
     % 
-    % % Calcolo di Hu_cal
-    % Hu_cal = kron(eye(N-1) , Hu);
-    % 
-    % %calcolo di hu_cal
-    % hu_cal = [];
-    % for i = 1:N-1
-    %    hu_cal = [hu_cal;hu];
+    % %Calcolo di g_cal
+    % g_cal = [];
+    % for i = 1:N
+    %     if i == N-1
+    %         mat = g;
+    %     else
+    %         mat = zeros(height(A) , 1);
+    %     end
+    %     g_cal = [g_cal ; mat];
     % end
 end
 
