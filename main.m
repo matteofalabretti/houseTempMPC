@@ -320,7 +320,7 @@ for i = 1:100
     end
 
     controlAction = MPC(x_run, sys_discretizzato, Q, R, Np, G,g, X_vinc_lin, U_vinc_lin);
-    u_online = [u_online;controlAction(1:3)];
+    u_online = [u_online;controlAction(1:3)'];
     [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + controlAction(1:3)), [60*(i-1) 60*i], x_run+x_ref);
     htt = [htt;tt];
     hxx = [hxx;xx];
