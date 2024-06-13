@@ -69,7 +69,7 @@ trasparenzaFigura(trasp)
 hold on
 plot3(x0_centrato(1) ,x0_centrato(2), x0_centrato(3) , "." , MarkerSize=50)
 
-legend(["ciao" , "Punto di partenza"])
+legend(["n-steps" , "Punto di partenza"])
 
 figure;
 Np_steps_Q.plot();
@@ -82,7 +82,7 @@ trasparenzaFigura(trasp)
 hold on
 plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "." , MarkerSize=50)
 
-
+legend(["n-steps" , "Punto di partenza"])
 
 %% simulazione del sistema discretizzato
 
@@ -127,7 +127,7 @@ for i = 1:n_sim
             -X_min + A_cal * x0_new;
             U_max;
             -U_min;
-            g - G * A_cal_n * x0_new];% spero che sia questo il vincolo terminale
+            g - G * A_cal_n * x0_new]; % vincolo terminale
     
     % % plot dei vincoli
     % figure
