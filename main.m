@@ -88,15 +88,6 @@ disp(eig(A_lin));
 % disp("Stati con ingresso costante a: " + u(1));
 % disp(-sys_lineare.A^-1 * sys_lineare.B * zeros(3,1));
 
-%% Simulazione Sistema
-% 
-% tt_sim = 0:1:4999;
-% uu_sim = ones(3,5000) * 100;
-% xx_0sim = [284 285 284 0 10 0]';
-% 
-% 
-% lsim(sys_lineare , uu_sim , tt_sim , xx_0sim)
-
 %% Discretizziamo
 Ts = 60;
 sys_discretizzato = c2d(sys_lineare, Ts);
@@ -112,14 +103,6 @@ disp(abs(eig(sys_discretizzato.A)));
 % 
 % disp("Punto di equilibiro con ingresso pari a 100:")
 % disp(x_eq);
-
-%% simulazione sistema discretizzato
-% 
-% tt_sim = 0:Ts:4999;
-% uu_sim = ones(3,length(tt_sim)) * 100;
-% xx_0sim = [284 285 284 0 10 0]';
-% 
-% lsim(sys_discretizzato , uu_sim , tt_sim , xx_0sim)
 
 %% analisi della raggiungibilità
 
@@ -191,8 +174,9 @@ zlim(limitiQ)
 
 %% N-step controllable set
 
-Np = 7;
-[Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
+x0_centrato = [284 285 284 0 10 0]' - x_ref;
+
+[Np_steps_H, Np_steps_h , Np] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, x0_centrato);
 
 %% Verifica fattibilita dal punto di partenza
 trasp = 0.3; %impostiamo la trasparenza delle figure
@@ -203,7 +187,6 @@ Np_step = Np_step.minHRep();
 Np_steps_T = projection(Np_step , 1:3);
 Np_steps_Q = projection(Np_step , 4:6);
 
-x0_centrato = [284 285 284 0 10 0]' - x_ref;
 
 figure
 Np_steps_T.plot();
@@ -350,11 +333,11 @@ title("Ingressi")
 
 %% N-step controllable set per il  vincolo termiale
 G = Hx;
-g = [zeros(6,1)];
+g = [zeros(12,1)];
 
+x0_centrato = [284 285 284 0 10 0]' - x_ref;
 
-Np = 7;
-[Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, Np);
+[Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, x0_centrato);
 
 %% Verifica fattibilita dal punto di partenza
 trasp = 0.3; %impostiamo la trasparenza delle figure
@@ -365,7 +348,6 @@ Np_step = Np_step.minHRep();
 Np_steps_T = projection(Np_step , 1:3);
 Np_steps_Q = projection(Np_step , 4:6);
 
-x0_centrato = [284 285 284 0 10 0]' - x_ref;
 
 figure
 Np_steps_T.plot();
