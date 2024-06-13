@@ -10,6 +10,9 @@ set(0,'DefaultFigureWindowStyle', 'docked')
 set(0,'defaulttextInterpreter','latex')
 rng('default');
 
+addpath('funzioni\')
+addpath('funzioniAggiuntive\')
+
 %% Definizioni costanti
 T_ext = 278;
 k_ext = 9;
@@ -337,6 +340,8 @@ g = [zeros(12,1)];
 
 x0_centrato = [284 285 284 0 10 0]' - x_ref;
 
+%% LA PROSSIMA SEZIONE FA BLOCCARE MATLAB
+%% Non Far andare!!! al 3 step si blocca matlab
 [Np_steps_H, Np_steps_h] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, x0_centrato);
 
 %% Verifica fattibilita dal punto di partenza

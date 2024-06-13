@@ -22,8 +22,9 @@ function [H_nsteps, h_nsteps , Np] = controllable_set(Hx, hx, Hu, hu, H_target, 
         temp = Polyhedron('A', [H_ii_steps*A, H_ii_steps*B; zeros(size(Hu, 1), n), Hu], 'b', [h_ii_steps;hu]);
     
         % Proiezioni in R^n
-        temp = projection(temp, 1:n);
         % temp = temp.minHRep();
+        temp = projection(temp, 1:n);
+        
 
         % Intersezione con X := {x | Hx*x <= hx}
         H_ii_steps = [temp.A;Hx];
