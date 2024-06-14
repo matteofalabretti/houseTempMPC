@@ -1,20 +1,21 @@
 % In questo script valutiamo MPC con vincolo di disuguaglianza, quindi con
 % un controli invariant set (CIS) e con R e Q uguali
 
-%% Richiamiamo lo script di inizzializzazione
 
 clear;
 clc;
 close all
 
+%% Impostazioni dell script
 %Impostiamo il tempo di campionamento
-Ts = 60;
-
-inizzializzazione
-
-%% Definizione delle matrici del costo quadratico
-Q = 1.e1*eye(6);
+Ts = 30; % [secondi]
+% Definizione delle matrici del costo quadratico
+Q = 1.e2*eye(6);
 R = 1e1*eye(3);
+
+
+%% Richiamiamo lo script di inizzializzazione
+inizzializzazione
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
@@ -148,18 +149,36 @@ end
 
 %% plot della simulazione
 
+tempo = (1:n_sim) * Ts/60; %[min]
+
 figure
+
+sgtitle("Evoluzioni degli stati")
+
 subplot(2 , 1, 1)
-plot(1:n_sim , storia_x(1:3 , :) + x_ref(1:3))
-title("Evoluzione della temperatura")
+plot( tempo, storia_x(1:3 , :) + x_ref(1:3))
+yline(x_ref(1))
+legend(["T1" , "T2" , "T3" ,"Obbiettivo"])
+ylabel("Temperatura $[^{\circ}C]$" , Interpreter="latex");
+xlabel("Tempo $[min]$" , Interpreter="latex");
+title("Temperatura")
 
 subplot(2 , 1, 2)
-plot(1:n_sim , storia_x(4:end , :) + x_ref(4:end))
-title("Evoluzione della potenza dei termosifoni")
+plot(tempo, storia_x(4:end , :) + x_ref(4:end))
+yline(x_ref(4))
+ylim([0 , 150])
+legend(["Q1"  "Q2"  "Q3" "Obbiettivo"])
+ylabel("Potenza $[W]$" , Interpreter="latex");
+xlabel("Tempo $[min]$" , Interpreter="latex");
+title("Potenza dei termosifoni")
+
 
 figure
-plot(1:n_sim , storia_u + u_ref)
-title("Evoluzione degli ingressi")
+plot(tempo, storia_u + u_ref)
+title("Azioni di controllo")
+ylabel("Potenza $[W]$" , Interpreter="latex");
+xlabel("Tempo $[min]$" , Interpreter="latex");
+legend(["Q1"  "Q2"  "Q3"])
 
 %% simulazione a tempo continuo con il controllo
 

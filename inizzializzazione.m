@@ -37,26 +37,28 @@ x_start = [284 285 284 0 10 0]';
 %% ODE del sistema
 dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, u_ref);
 
-% simulazione del comportamento del sistema al variare degli stati
-x0 = [280 285 290 0 0 0; 250 255 260 25 50 100; 285 290 295 25 50 100]';
+simulazione = 5000;
 
-for i= 1:3
-    [tt, xx] = ode45(dxdt, [0 5000], x0(:, i));
-    figure
-    hold on
-   
-    subplot(2,1,1)
-    plot(tt, xx(: , 1:3));
-    title("Temperature delle stanze")
-    legend(["T1" "T2" "T3"])
-    
-    subplot(2, 1,2)
-    plot(tt , xx(: , 4:6));
-    title("Potenza termica dei termosifoni")
-    legend(["Q1" "Q2" "Q3"])
-    hold off
+% simulazione del comportamento del sistema
+[tt, xx] = ode45(dxdt, linspace(0, simulazione, simulazione+1), x_start);
+figure
+hold on
 
-end
+sgtitle("Simulazione del sistema con ingresso constante pari a 100W") 
+subplot(2,1,1)
+plot(tt, xx(: , 1:3));
+title("Temperature delle stanze")
+ylabel("Temperatura $[ ^{\circ}C]$" , Interpreter="latex")
+xlabel("Tempo $[s]$",  Interpreter="latex")
+legend(["T1" "T2" "T3"])
+
+subplot(2, 1,2)
+plot(tt , xx(: , 4:6));
+title("Potenza termica dei termosifoni")
+ylabel("Potenza $[W]$" , Interpreter="latex")
+xlabel("Tempo $[s]$",  Interpreter="latex")
+legend(["Q1" "Q2" "Q3"])
+hold off
 
 %% Linearizzazione
 
@@ -103,8 +105,6 @@ disp(eig(A_lin));
 
 %% Discretizziamo
 sys_discretizzato = c2d(sys_lineare, Ts);
-figure
-pzmap(sys_discretizzato)
 
 % Verifica della Stabilità del sistema discretizzato
 disp("Modulo degli autovalori di della matrice A discretizzata:")
