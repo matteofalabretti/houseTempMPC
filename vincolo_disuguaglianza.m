@@ -1,6 +1,10 @@
 % In questo script valutiamo MPC con vincolo di disuguaglianza, quindi con
 % un controli invariant set (CIS) e con R e Q uguali
 
+% Se Q > 1e2 probabilmente il calcolo del N Steps controllable set si
+% blocca quindi in quel caso saltare la parte e impostare manualmente i
+% passi facendo: Np = #passi
+
 
 clear;
 clc;
@@ -11,7 +15,7 @@ close all
 Ts = 60; % [secondi]
 % Definizione delle matrici del costo quadratico
 Q = 1.e1*eye(6);
-R = 1e2*eye(3);
+R = 1e1*eye(3);
 
 
 %% Richiamiamo lo script di inizzializzazione
