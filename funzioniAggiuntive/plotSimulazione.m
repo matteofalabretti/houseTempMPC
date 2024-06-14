@@ -12,7 +12,8 @@ function [plot_T , plot_Q , plot_U]  = plotSimulazione(tempo, storia_x  , storia
     ylabel("Temperatura $[^{\circ}C]$" , Interpreter="latex");
     xlabel("Tempo $[min]$" , Interpreter="latex");
     title("Temperatura")
-    
+    ylim([280 , 290])
+
     plot_Q = subplot(2 , 1, 2);
     plot(tempo, storia_x(4:end , :))
     yline(x_ref(4))
@@ -21,12 +22,14 @@ function [plot_T , plot_Q , plot_U]  = plotSimulazione(tempo, storia_x  , storia
     ylabel("Potenza $[W]$" , Interpreter="latex");
     xlabel("Tempo $[min]$" , Interpreter="latex");
     title("Potenza dei termosifoni")
-    
+    ylim([0 , 120])
+
     figure
     plot_U = plot(tempo, storia_u);
     title("Azioni di controllo")
     ylabel("Potenza $[W]$" , Interpreter="latex");
     xlabel("Tempo $[min]$" , Interpreter="latex");
     legend(["Q1"  "Q2"  "Q3"])
+    ylim([100 , 150])
 
 end
