@@ -10,8 +10,8 @@ close all
 %Impostiamo il tempo di campionamento
 Ts = 60; % [secondi]
 % Definizione delle matrici del costo quadratico
-Q = 1.e2*eye(6);
-R = 1e1*eye(3);
+Q = 1.e1*eye(6);
+R = 1e2*eye(3);
 
 
 %% Richiamiamo lo script di inizzializzazione
@@ -89,97 +89,6 @@ legend(["n-steps" , "Punto di partenza"])
 
 [A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np);
 
-n_sim = 100;
-x0_new = x0_centrato;
-
-%calcoliamo H
-H = 2 * (B_cal' * Q_cal * B_cal + R_cal);
-
-% impostiamo i vincoli
-A_qp = [B_cal; %vincolo di massimo dello stato
-        -B_cal; %vincolo di minimo dello stato
-        eye(width(B_cal)); % vincolo di massimo dell'ingresso
-        -eye(width(B_cal)); % vincolo di minimo dell'ingresso 
-        G * B_cal_n]; % Spero che sia questo il vincolo
-
-% definizione vincoli du ingresso e stati centrati
-X_max = [];
-X_min = [];
-U_max = [];
-U_min = [];
-
-for i = 1:Np
-   X_max = [X_max; X_vinc_lin(1:6)];
-   X_min = [X_min; X_vinc_lin(7:end)];
-   U_max = [U_max; U_vinc_lin(1:3)];
-   U_min = [U_min; U_vinc_lin(4:end)];
-end
-
-storia_x = [];
-storia_u = [];
-
-for i = 1:n_sim
-    % salvo la precedente configurazione degli stati
-    storia_x(1:6 , i) = x0_new;
-
-    %calcoliamo f e b_qp
-    f = 2* x0_new' * A_cal' * Q_cal * B_cal;
-    b_qp = [X_max - A_cal * x0_new;
-            -X_min + A_cal * x0_new;
-            U_max;
-            -U_min;
-            g - G * A_cal_n * x0_new]; % vincolo terminale
-    
-    % % plot dei vincoli
-    % figure
-    % Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
-    % Vinc_U_primo = Vinc_U.projection(1:3);
-    % Vinc_U_primo.plot();
-
-    % troviamo il minimo
-    [u , ~ , flag] = quadprog(H , f , A_qp , b_qp);
-    u_0 = u(1:3);
-    
-    storia_u(1:3 , i) = u_0; 
-
-    % applichiamo il primo passo
-    x0_new = sys_discretizzato.A * x0_new + sys_discretizzato.B * u_0; % applichiamo solo il primo passo
-
-end
-
-%% plot della simulazione
-
-tempo = (1:n_sim) * Ts/60; %[min]
-
-figure
-
-sgtitle("Evoluzioni degli stati")
-
-subplot(2 , 1, 1)
-plot( tempo, storia_x(1:3 , :) + x_ref(1:3))
-yline(x_ref(1))
-legend(["T1" , "T2" , "T3" ,"Obbiettivo"])
-ylabel("Temperatura $[^{\circ}C]$" , Interpreter="latex");
-xlabel("Tempo $[min]$" , Interpreter="latex");
-title("Temperatura")
-
-subplot(2 , 1, 2)
-plot(tempo, storia_x(4:end , :) + x_ref(4:end))
-yline(x_ref(4))
-ylim([0 , 150])
-legend(["Q1"  "Q2"  "Q3" "Obbiettivo"])
-ylabel("Potenza $[W]$" , Interpreter="latex");
-xlabel("Tempo $[min]$" , Interpreter="latex");
-title("Potenza dei termosifoni")
-
-
-figure
-plot(tempo, storia_u + u_ref)
-title("Azioni di controllo")
-ylabel("Potenza $[W]$" , Interpreter="latex");
-xlabel("Tempo $[min]$" , Interpreter="latex");
-legend(["Q1"  "Q2"  "Q3"])
-
 %% simulazione a tempo continuo con il controllo
 
 htt=[];
@@ -187,36 +96,27 @@ hxx = [];
 u_online = [];
 x_ini = [284 285 284 0 10 0]';
 
+n_sim = 100;
 
-for i = 1:100
-
+for i = 1:n_sim
 
     if i == 1
         x_run = x_ini-x_ref(1:6);
     else
-        x_run = xx(height(xx), 1:6)'-x_ref(1:6);
+        x_run = hxx(: , end)-x_ref(1:6);
     end
 
     controlAction = MPC(x_run, sys_discretizzato, Q, R, Np, G,g, X_vinc_lin, U_vinc_lin);
-    u_online = [u_online;controlAction(1:3)'];
-    [tt, xx] = ode45(@(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, [100; 100; 100] + controlAction(1:3)), [60*(i-1) 60*i], x_run+x_ref);
-    htt = [htt;tt];
-    hxx = [hxx;xx];
+    tempo = linspace(Ts*(i-1), Ts*i , Ts);
+    controlAction = controlAction(1:3) + [100; 100; 100];
+    u_online = [u_online,repmat(controlAction , 1 , Ts)];
+    dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, controlAction);
+    [tt, xx] = ode45(dxdt , tempo , x_run+x_ref);
+    htt = [htt,tt'];
+    hxx = [hxx,xx'];
 
 end
 
 %% Plot
-figure
-subplot(2 , 1 , 1)
-plot(htt, hxx(: , 1:3)');
-title("Temperature")
 
-subplot(2 , 1 , 2)
-plot(htt, hxx(: , 4:6)')
-title("Potenza Termosifoni")
-
-
-
-figure
-plot(u_online+[100 100 100])
-title("Ingressi")
+[plot_T  , plot_Q , plot_U] = plotSimulazione(htt , hxx , u_online , x_ref);
