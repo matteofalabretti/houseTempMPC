@@ -8,14 +8,14 @@ close all
 
 %% Impostazioni dell script
 %Impostiamo il tempo di campionamento
-Ts = 30; % [secondi]
+Ts = 60; % [secondi]
 % Definizione delle matrici del costo quadratico
 Q = 1.e2*eye(6);
 R = 1e1*eye(3);
 
 
 %% Richiamiamo lo script di inizzializzazione
-inizzializzazione
+inizializzazione
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
