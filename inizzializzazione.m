@@ -95,13 +95,9 @@ sys_lineare = ss(A_lin, B_lin, C_lin, D_lin);
 
 x0_centrato = x_start - x_ref;
 
-% 
-% % Verifica della Stabilità del sistema lineare
+% Verifica della Stabilità del sistema lineare
 disp("Autovalori di della matrice A linearizzata:")
 disp(eig(A_lin));
-
-% disp("Stati con ingresso costante a: " + u(1));
-% disp(-sys_lineare.A^-1 * sys_lineare.B * zeros(3,1));
 
 %% Discretizziamo
 sys_discretizzato = c2d(sys_lineare, Ts);
