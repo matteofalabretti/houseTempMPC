@@ -28,20 +28,20 @@ for i = 1:Window
 end
 
 %calcoliamo f e b_qp
-    f = 2* x_attuale' * A_cal' * Q_cal * B_cal;
-    b_qp = [X_max - A_cal * x_attuale;
-            -X_min + A_cal * x_attuale;
-            U_max;
-            -U_min;
-            g - G * A_cal_n * x_attuale];% spero che sia questo il vincolo terminale
-    
-    % % plot dei vincoli
-    % figure
-    % Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
-    % Vinc_U_primo = Vinc_U.projection(1:3);
-    % Vinc_U_primo.plot();
+f = 2* x_attuale' * A_cal' * Q_cal * B_cal;
+b_qp = [X_max - A_cal * x_attuale;
+        -X_min + A_cal * x_attuale;
+        U_max;
+        -U_min;
+        g - G * A_cal_n * x_attuale];% spero che sia questo il vincolo terminale
 
-    % troviamo il minimo
-    [controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp);
+% % plot dei vincoli
+% figure
+% Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
+% Vinc_U_primo = Vinc_U.projection(1:3);
+% Vinc_U_primo.plot();
+
+% troviamo il minimo
+[controlAction , ~ , ~] = quadprog(H , f , A_qp , b_qp);
 
 end
