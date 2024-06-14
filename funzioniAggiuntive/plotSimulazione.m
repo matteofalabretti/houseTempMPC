@@ -30,6 +30,6 @@ function [plot_T , plot_Q , plot_U]  = plotSimulazione(tempo, storia_x  , storia
     ylabel("Potenza $[W]$" , Interpreter="latex");
     xlabel("Tempo $[min]$" , Interpreter="latex");
     legend(["Q1"  "Q2"  "Q3"])
-    ylim([100 , 150])
+    ylim([90 , 150])
 
 end
