@@ -1,24 +1,27 @@
-% In questo script valutiamo MPC con vincolo di disuguaglianza, quindi con
-% un controli invariant set (CIS) e con R e Q uguali
-
-%% Richiamiamo lo script di inizzializzazione
+% In questo script valutiamo MPC con vincolo di uguaglianza, con R e Q uguali
 
 clear;
 clc;
 close all
 
+%% Impostazioni dell script
 %Impostiamo il tempo di campionamento
-Ts = 60;
-
-inizzializzazione
-
-%% Definizione delle matrici del costo quadratico
+Ts = 60; % [secondi]
+% Definizione delle matrici del costo quadratico
 Q = 1.e1*eye(6);
 R = 1e1*eye(3);
 
-%% N-step controllable set per il  vincolo termiale
+%% Richiamiamo lo script di inizzializzazione
+inizializzazione
+
+%% Creaiamo i vincoli iniziali
+% poniamo: 0 <= x <= 0
+% quindi: x = 0
 G = Hx;
 g = [zeros(12,1)];
+
+setIniziale = Polyhedron(G , g);
+disp("Il set iniziale è vuoto? " + setIniziale.isEmptySet)
 
 %% LA PROSSIMA SEZIONE FA BLOCCARE MATLAB
 %% Non Far andare!!! dopo 3 step si blocca matlab
@@ -45,6 +48,8 @@ trasparenzaFigura(trasp)
 hold on
 plot3(x0_centrato(1) ,x0_centrato(2), x0_centrato(3) , "." , MarkerSize=50)
 
+legend(["n-steps" , "Punto di partenza"])
+
 figure;
 Np_steps_Q.plot();
 title("Proiezione del dominio di attrazione della potenza termica dei termosifoni")
@@ -56,6 +61,7 @@ trasparenzaFigura(trasp)
 hold on
 plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "." , MarkerSize=50)
 
+legend(["n-steps" , "Punto di partenza"])
 
 %% simulazione a tempo continuo con il controllo e vincolo terminale
 
@@ -63,9 +69,9 @@ htt=[];
 hxx = [];
 u_online = [];
 x_ini = [284 285 284 0 10 0]';
+n_sim = 100;
 
-
-for i = 1:100
+for i = 1:n_sim
 
 
     if i == 1
@@ -83,17 +89,33 @@ for i = 1:100
 end
 
 %% Plot
-figure
-subplot(2 , 1 , 1)
-plot(htt, hxx(: , 1:3)');
-title("Temperature")
-
-subplot(2 , 1 , 2)
-plot(htt, hxx(: , 4:6)')
-title("Potenza Termosifoni")
-
-
+tempo = (1:n_sim) * Ts/60; %[min]
 
 figure
-plot(u_online+[100 100 100])
-title("Ingressi")
+
+sgtitle("Evoluzioni degli stati")
+
+subplot(2 , 1, 1)
+plot( tempo, storia_x(1:3 , :) + x_ref(1:3))
+yline(x_ref(1))
+legend(["T1" , "T2" , "T3" ,"Obbiettivo"])
+ylabel("Temperatura $[^{\circ}C]$" , Interpreter="latex");
+xlabel("Tempo $[min]$" , Interpreter="latex");
+title("Temperatura")
+
+subplot(2 , 1, 2)
+plot(tempo, storia_x(4:end , :) + x_ref(4:end))
+yline(x_ref(4))
+ylim([0 , 150])
+legend(["Q1"  "Q2"  "Q3" "Obbiettivo"])
+ylabel("Potenza $[W]$" , Interpreter="latex");
+xlabel("Tempo $[min]$" , Interpreter="latex");
+title("Potenza dei termosifoni")
+
+
+figure
+plot(tempo, storia_u + u_ref)
+title("Azioni di controllo")
+ylabel("Potenza $[W]$" , Interpreter="latex");
+xlabel("Tempo $[min]$" , Interpreter="latex");
+legend(["Q1"  "Q2"  "Q3"])
