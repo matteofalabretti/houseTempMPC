@@ -14,7 +14,7 @@ close all
 %Impostiamo il tempo di campionamento
 Ts = 60; % [secondi]
 % Definizione delle matrici del costo quadratico
-Q = 1.e1*eye(6);
+Q = 5.e1*eye(6);
 R = 1e1*eye(3);
 
 
@@ -26,7 +26,6 @@ inizializzazione
 
 CIS_G = Polyhedron(G, g);
 CIS_G = minHRep(CIS_G);
-% disp("Il Control invariant set è un insieme vuoto? " + boolean(CIS_G.isEmptySet));
 
 CIS_G_T = projection(CIS_G , 1:3);
 CIS_G_Q = projection(CIS_G , 4:6);
@@ -88,10 +87,6 @@ hold on
 plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "." , MarkerSize=50)
 
 legend(["n-steps" , "Punto di partenza"])
-
-%% simulazione del sistema discretizzato
-
-[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , Q , Np);
 
 %% simulazione a tempo continuo con il controllo
 

@@ -96,4 +96,4 @@ end
 
 %% Plot
 
-plotSimulazione(htt , hxx , u_online , x_ref)
+plotSimulazione(htt , hxx , u_online , x_ref);
