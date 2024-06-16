@@ -9,22 +9,26 @@ close all
 %% Impostazioni dell script
 %Impostiamo il tempo di campionamento
 Ts = 60; % [secondi]
-% Definizione delle matrici del costo quadratico
-Q = 1.e1*eye(6);
-R = 1e1*eye(3);
 
 %% Richiamiamo lo script di inizzializzazione
 inizializzazione
 
+%% Definizione delle matrici del costo quadratico
+Q = 1.e2*eye(6);
+R = 1e1*eye(3);
+% S come soluzione di Riccati
+[~ , S] = dlqr(sys_discretizzato.A , sys_discretizzato.B , Q , R); 
+
+
 %% Creaiamo i vincoli iniziali
 % poniamo: 0 <= x <= 0
 % quindi: x = 0
-G = Hx;
+G = [eye(6);
+    -eye(6)];
 g = [zeros(12,1)];
 
 setIniziale = Polyhedron(G , g);
-disp("Il set iniziale è vuoto? " + setIniziale.isEmptySet)
-
+disp("Il set iniziale contiene l'origine? " + setIniziale.contains(zeros(6,1)))
 %% LA PROSSIMA SEZIONE FA BLOCCARE MATLAB
 %% Non Far andare!!! dopo 3 step si blocca matlab
 % [Np_steps_H, Np_steps_h , Np] = controllable_set(Hx, hx, Hu, hu, G, g, sys_discretizzato.A, sys_discretizzato.B, x0_centrato);
@@ -83,7 +87,7 @@ for i = 1:n_sim
         x_run = hxx(: , end)-x_ref(1:6);
     end
 
-    controlAction = MPC_Uguaglianza(x_run, sys_discretizzato, Q, R, Np, G,g, X_vinc_lin, U_vinc_lin);
+    controlAction = MPC_Uguaglianza(x_run, sys_discretizzato, Q, R, S, Np, G,g, X_vinc_lin, U_vinc_lin);
     tempo = linspace(Ts*(i-1), Ts*i , Ts);
     controlAction = controlAction(1:3) + [100; 100; 100];
     u_online = [u_online,repmat(controlAction , 1 , Ts)];
@@ -96,4 +100,4 @@ end
 
 %% Plot
 
-plotSimulazione(htt , hxx , u_online , x_ref);
+[T_plot , Q_plot , U_plot] = plotSimulazione(htt , hxx , u_online , x_ref);

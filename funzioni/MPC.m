@@ -1,6 +1,6 @@
-function controlAction = MPC(x_attuale, sys, Q, R, Window, G, g, Vinc_X, Vinc_U)
+function [controlAction , flag] = MPC(x_attuale, sys, Q, R , S , Window, G, g, Vinc_X, Vinc_U)
 
-[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , Q , Window);
+[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , S , Window);
 
 
 
@@ -42,6 +42,6 @@ b_qp = [X_max - A_cal * x_attuale;
 % Vinc_U_primo.plot();
 
 % troviamo il minimo
-[controlAction , ~ , ~] = quadprog(H , f , A_qp , b_qp);
+[controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp);
 
 end

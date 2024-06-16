@@ -1,6 +1,6 @@
-function controlAction = MPC_Uguaglianza(x_attuale, sys, Q, R, Window, G, g, Vinc_X, Vinc_U)
+function controlAction = MPC_Uguaglianza(x_attuale, sys, Q, R , S , Window, G, g, Vinc_X, Vinc_U)
 
-[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , Q , Window);
+[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , S , Window);
 
 
 

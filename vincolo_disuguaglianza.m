@@ -13,13 +13,15 @@ close all
 %% Impostazioni dell script
 %Impostiamo il tempo di campionamento
 Ts = 60; % [secondi]
-% Definizione delle matrici del costo quadratico
-Q = 5.e1*eye(6);
-R = 1e1*eye(3);
-
 
 %% Richiamiamo lo script di inizzializzazione
 inizializzazione
+
+%% Definizione delle matrici del costo quadratico
+Q = 1.e3*eye(6);
+R = 1e1*eye(3);
+% S come soluzione di Riccati
+[~ , S] = dlqr(sys_discretizzato.A , sys_discretizzato.B , Q , R); 
 
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
@@ -94,7 +96,7 @@ htt=[];
 hxx = [];
 u_online = [];
 x_ini = [284 285 284 0 10 0]';
-
+flag = zeros(1 , Np);
 n_sim = 100;
 
 for i = 1:n_sim
@@ -105,7 +107,7 @@ for i = 1:n_sim
         x_run = hxx(: , end)-x_ref(1:6);
     end
 
-    controlAction = MPC(x_run, sys_discretizzato, Q, R, Np, G,g, X_vinc_lin, U_vinc_lin);
+    [controlAction , flag(i)]= MPC(x_run, sys_discretizzato, Q, R , S , Np, G,g, X_vinc_lin, U_vinc_lin);
     tempo = linspace(Ts*(i-1), Ts*i , Ts);
     controlAction = controlAction(1:3) + [100; 100; 100];
     u_online = [u_online,repmat(controlAction , 1 , Ts)];
@@ -119,3 +121,4 @@ end
 %% Plot
 
 [plot_T  , plot_Q , plot_U] = plotSimulazione(htt , hxx , u_online , x_ref);
+
