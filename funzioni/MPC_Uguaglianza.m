@@ -45,6 +45,10 @@ b_eq = g - G * A_cal_n * x_attuale;
 % Vinc_U_primo.plot();
 
 % troviamo il minimo
-[controlAction , ~ , ~] = quadprog(H , f , A_qp , b_qp , A_eq , b_eq);
+[controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp , A_eq , b_eq);
+
+if flag ~=1
+    error("La risoluzione di MPC ha creato un problema, Flag di QuadProgr: " + flag)
+end
 
 end

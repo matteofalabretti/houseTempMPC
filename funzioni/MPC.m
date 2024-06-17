@@ -44,4 +44,8 @@ b_qp = [X_max - A_cal * x_attuale;
 % troviamo il minimo
 [controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp);
 
+if flag ~=1
+    error("La risoluzione di MPC ha creato un problema, Flag di QuadProgr: " + flag)
+end
+
 end

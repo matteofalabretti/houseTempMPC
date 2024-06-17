@@ -75,6 +75,8 @@ Np = 20;
 htt=[];
 hxx = [];
 u_online = [];
+flag = [];
+
 x_ini = [284 285 284 0 10 0]';
 
 n_sim = 100;
@@ -87,7 +89,7 @@ for i = 1:n_sim
         x_run = hxx(: , end)-x_ref(1:6);
     end
 
-    controlAction = MPC_Uguaglianza(x_run, sys_discretizzato, Q, R, S, Np, G,g, X_vinc_lin, U_vinc_lin);
+    [controlAction  , flag(i)]= MPC_Uguaglianza(x_run, sys_discretizzato, Q, R, S, Np, G,g, X_vinc_lin, U_vinc_lin);
     tempo = linspace(Ts*(i-1), Ts*i , Ts);
     controlAction = controlAction(1:3) + [100; 100; 100];
     u_online = [u_online,repmat(controlAction , 1 , Ts)];
