@@ -22,11 +22,14 @@ X_min = [];
 U_max = [];
 U_min = [];
 
-for i = 1:Window
+for i = 1:Window+1
    X_max = [X_max; Vinc_X(1:6)];
    X_min = [X_min; Vinc_X(7:end)];
-   U_max = [U_max; Vinc_U(1:3)];
-   U_min = [U_min; Vinc_U(4:end)];
+   
+   if i ~= Window+1
+        U_max = [U_max; Vinc_U(1:3)];
+        U_min = [U_min; Vinc_U(4:end)];
+   end
 end
 
 %calcoliamo f e b_qp
