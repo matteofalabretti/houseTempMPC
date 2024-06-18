@@ -1,10 +1,9 @@
 % In questo script valutiamo MPC con vincolo di disuguaglianza, quindi con
-% un controli invariant set (CIS) e con R e Q uguali
+% un control invariant set (CIS)
 
-% Se Q > 1e2 probabilmente il calcolo del N Steps controllable set si
+% * Se Q > 1e2 probabilmente il calcolo del N Steps controllable set si
 % blocca quindi in quel caso saltare la parte e impostare manualmente i
-% passi facendo: Np = #passi
-
+% passi facendo: Np = #passi * 
 
 clear;
 clc;
