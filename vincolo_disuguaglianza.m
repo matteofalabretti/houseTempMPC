@@ -18,7 +18,7 @@ Ts = 60; % [secondi]
 inizializzazione
 
 %% Definizione delle matrici del costo quadratico
-Q = 1.e2*eye(6);
+Q = 1.e3*eye(6);
 R = 1e1*eye(3);
 % S come soluzione di Riccati
 [~ , S] = dlqr(sys_discretizzato.A , sys_discretizzato.B , Q , R); 
@@ -26,6 +26,8 @@ R = 1e1*eye(3);
 %% Verifica dell'esistenza del Controllable Invariant Set
 [G, g]= CIS(sys_discretizzato.A, sys_discretizzato.B, zeros(6,1), zeros(3,1), Hx, hx, Hu, hu, Q, R);
 
+
+%% Plot del CIS
 CIS_G = Polyhedron(G, g);
 CIS_G = minHRep(CIS_G);
 
