@@ -69,7 +69,7 @@ disp("Il set iniziale contiene l'origine? " + setIniziale.contains(zeros(6,1)))
 % legend(["n-steps" , "Punto di partenza"])
 
 %% simulazione a tempo continuo con il controllo e vincolo terminale
-Np = 50;
+Np = 20;
 
 htt=[];
 hxx = [];

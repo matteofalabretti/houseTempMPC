@@ -5,7 +5,7 @@ function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal] = Calligrafica(A , B
     A_cal = [];
     B_cal = [];
     
-    for i = 1:N
+    for i = 0:N
         mat = A^i;
         % Calcolo di A_cal
         A_cal = [A_cal;mat];
@@ -15,8 +15,9 @@ function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal] = Calligrafica(A , B
     end
     
     % Calcolo di B cal
-    for i = 1:N
+    for i = 0:N
         riga_B_cal = [];
+        
         for j = 1:N
             if (i-j) < 0
                 riga_B_cal = [riga_B_cal , zeros(height(B) , width(B))];
@@ -24,7 +25,6 @@ function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal] = Calligrafica(A , B
                 riga_B_cal= [riga_B_cal , A^(i-j) * B];
             end
         end
-        
         B_cal = [B_cal ; riga_B_cal];
     
         if i == N
@@ -34,7 +34,7 @@ function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal] = Calligrafica(A , B
     end
     
     %Calcolo di Q_cal
-    Q_cal = diagonaleEccettoUltima(Q , S , N);
+    Q_cal = diagonaleEccettoUltima(Q , S , N+1);
     
     %Calcolo di R cal
     R_cal = kron(eye(N) , R );
