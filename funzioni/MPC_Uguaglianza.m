@@ -1,4 +1,4 @@
-function controlAction = MPC_Uguaglianza(x_attuale, sys, Q, R , S , Window, G, g, Vinc_X, Vinc_U)
+function [controlAction ,  flag]= MPC_Uguaglianza(x_attuale, sys, Q, R , S , Window, G, g, Vinc_X, Vinc_U)
 
 [A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , S , Window);
 
@@ -46,9 +46,5 @@ b_eq = g - G * A_cal_n * x_attuale;
 
 % troviamo il minimo
 [controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp , A_eq , b_eq);
-
-if flag ~=1
-    error("La risoluzione di MPC ha creato un problema, Flag di QuadProgr: " + flag)
-end
 
 end

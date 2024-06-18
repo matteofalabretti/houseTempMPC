@@ -33,19 +33,9 @@ b_qp = [X_max - A_cal * x_attuale;
         -X_min + A_cal * x_attuale;
         U_max;
         -U_min;
-        g - G * A_cal_n * x_attuale];% spero che sia questo il vincolo terminale
-
-% % plot dei vincoli
-% figure
-% Vinc_U = Polyhedron('A' , A_qp , 'b' , b_qp);
-% Vinc_U_primo = Vinc_U.projection(1:3);
-% Vinc_U_primo.plot();
+        g - G * A_cal_n * x_attuale];
 
 % troviamo il minimo
 [controlAction , ~ , flag] = quadprog(H , f , A_qp , b_qp);
-
-if flag ~=1
-    error("La risoluzione di MPC ha creato un problema, Flag di QuadProgr: " + flag)
-end
 
 end

@@ -14,11 +14,10 @@ Ts = 60; % [secondi]
 inizializzazione
 
 %% Definizione delle matrici del costo quadratico
-Q = 1.e1*eye(6);
+Q = 1.1*eye(6);
 R = 1e1*eye(3);
 % S come soluzione di Riccati
 [~ , S] = dlqr(sys_discretizzato.A , sys_discretizzato.B , Q , R); 
-
 
 %% Creaiamo i vincoli iniziali
 % poniamo: 0 <= x <= 0
@@ -70,7 +69,7 @@ disp("Il set iniziale contiene l'origine? " + setIniziale.contains(zeros(6,1)))
 % legend(["n-steps" , "Punto di partenza"])
 
 %% simulazione a tempo continuo con il controllo e vincolo terminale
-Np = 20;
+Np = 50;
 
 htt=[];
 hxx = [];

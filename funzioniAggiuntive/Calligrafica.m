@@ -39,29 +39,6 @@ function [A_cal , A_cal_n ,B_cal , B_cal_n , Q_cal , R_cal] = Calligrafica(A , B
     %Calcolo di R cal
     R_cal = kron(eye(N) , R );
     
-
-    %% Non serve
-    % %calcolo di G cal
-    % matrici = {};
-    % for i = 1:N
-    %     if i == N-1
-    %         matrici{i} = G;
-    %     else
-    %         matrici{i} = eye(height(A));
-    %     end
-    % end
-    % G_cal = blkdiag(matrici{:});
-    % 
-    % %Calcolo di g_cal
-    % g_cal = [];
-    % for i = 1:N
-    %     if i == N-1
-    %         mat = g;
-    %     else
-    %         mat = zeros(height(A) , 1);
-    %     end
-    %     g_cal = [g_cal ; mat];
-    % end
 end
 
 %Funzione che crea una matrice diagonale a blocchi con tutti i blocchi
