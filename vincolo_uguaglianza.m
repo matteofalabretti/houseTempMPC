@@ -1,6 +1,6 @@
 % In questo script valutiamo MPC con vincolo di uguaglianza, con R e Q uguali
 % A tentativi abbiamo trovato che Np deve essere di almeno 20 passi con:
-% Ts = 60s e Q e R identità
+% Ts = 60s
 
 clear;
 clc;

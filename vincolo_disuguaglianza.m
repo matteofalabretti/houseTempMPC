@@ -1,5 +1,4 @@
-% In questo script valutiamo MPC con vincolo di disuguaglianza, quindi con
-% un control invariant set (CIS)
+% In questo script valutiamo MPC con vincolo di disuguaglianza, quindi con un control invariant set (CIS)
 
 % * Se Q > 1e2 probabilmente il calcolo del N Steps controllable set si
 % blocca quindi in quel caso saltare la parte e impostare manualmente i
@@ -91,7 +90,7 @@ plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "." , MarkerSize=50)
 
 legend(["n-steps" , "Punto di partenza"])
 
-%% simulazione a tempo continuo con il controllo
+%% Simulazione a tempo continuo con il controllo
 
 htt=[];
 hxx = [];
