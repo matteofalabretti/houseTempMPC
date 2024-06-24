@@ -33,6 +33,7 @@ CIS_G_T = projection(CIS_G , 1:3);
 CIS_G_Q = projection(CIS_G , 4:6);
 
 figure
+subplot(1 , 2 , 1)
 CIS_G_T.plot();
 title("Proiezione del CIS delle temperature nelle stanze")
 limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
@@ -40,7 +41,7 @@ xlim(limitiTemp)
 ylim(limitiTemp)
 zlim(limitiTemp)
 
-figure;
+subplot(1 , 2 , 2);
 CIS_G_Q.plot();
 title("Proiezione del CIS della potenza termica dei termosifoni")
 limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];
@@ -65,6 +66,7 @@ Np_steps_Q = projection(Np_step , 4:6);
 
 
 figure
+
 Np_steps_T.plot();
 title("Proiezione del dominio di attrazione delle temperature nelle stanze")
 limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
@@ -77,7 +79,7 @@ plot3(x0_centrato(1) ,x0_centrato(2), x0_centrato(3) , "." , MarkerSize=50)
 
 legend(["n-steps" , "Punto di partenza"])
 
-figure;
+figure
 Np_steps_Q.plot();
 title("Proiezione del dominio di attrazione della potenza termica dei termosifoni")
 limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];

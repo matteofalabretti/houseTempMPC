@@ -38,8 +38,7 @@ while  primaIterazione || CIS_poly_prev ~= CIS_poly_curr
     G_hat = [CIS_poly_curr.A * A_lqr;H];
     g_hat = [CIS_poly_curr.b + CIS_poly_curr.A * B * (K*x_ref - u_ref) ; h];
     CIS_poly_curr= Polyhedron(G_hat, g_hat);
-    CIS_poly_curr = CIS_poly_curr.minHRep(); %riduce alla rappresentazione minima del
-    %Poliedro
+    CIS_poly_curr = CIS_poly_curr.minHRep();
 
     if mod(i , 20) == 0
         disp("Iterazione numero: " + i + " tempo trascorso: " + toc);

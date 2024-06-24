@@ -14,7 +14,7 @@ Ts = 60; % [secondi]
 inizializzazione
 
 %% Definizione delle matrici del costo quadratico
-Q = 1.1*eye(6);
+Q = 1e3*eye(6);
 R = 1e1*eye(3);
 % S come soluzione di Riccati
 [~ , S] = dlqr(sys_discretizzato.A , sys_discretizzato.B , Q , R); 
