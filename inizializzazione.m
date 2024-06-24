@@ -37,26 +37,28 @@ x_start = [284 285 284 0 10 0]';
 %% ODE del sistema
 dxdt = @(t,x) tempCasa(t, x, k, C, tau, T_ext, k_ext, u_ref);
 
-simulazione = 5000;
+simulazione = 100 * 60;
 
 % simulazione del comportamento del sistema
 [tt, xx] = ode45(dxdt, linspace(0, simulazione, simulazione+1), x_start);
 figure
 hold on
 
+tt = tt/60;
+
 sgtitle("Simulazione del sistema con ingresso constante pari a 100W") 
 subplot(2,1,1)
 plot(tt, xx(: , 1:3));
 title("Temperature delle stanze")
 ylabel("Temperatura $[ ^{\circ}C]$" , Interpreter="latex")
-xlabel("Tempo $[s]$",  Interpreter="latex")
+xlabel("Tempo $[min]$",  Interpreter="latex")
 legend(["T1" "T2" "T3"])
 
 subplot(2, 1,2)
 plot(tt , xx(: , 4:6));
 title("Potenza termica dei termosifoni")
 ylabel("Potenza $[W]$" , Interpreter="latex")
-xlabel("Tempo $[s]$",  Interpreter="latex")
+xlabel("Tempo $[min]$",  Interpreter="latex")
 legend(["Q1" "Q2" "Q3"])
 hold off
 

@@ -1,4 +1,4 @@
-function [H_nsteps, h_nsteps , Np] = controllable_set(Hx, hx, Hu, hu, H_target, h_target, A, B, point)
+function [H_nsteps, h_nsteps , Np] = controllable_set(Hx, hx, Hu, hu, G, g, A, B, point)
 
     %controllable_set Calcolo del n-step controllable_set di un sistema lineare
 %   Input:
@@ -11,10 +11,10 @@ function [H_nsteps, h_nsteps , Np] = controllable_set(Hx, hx, Hu, hu, H_target, 
     n = size(A,2);
     
     % candidato iniziale
-    H_ii_steps = H_target;
-    h_ii_steps = h_target;
+    H_ii_steps = G;
+    h_ii_steps = g;
     tic;
-    for ii = 1:1000 
+    for i = 1:1000 
 
         % Calcoliamo il set ad un passo rispetto a quello precedente
         temp = Polyhedron('A', [H_ii_steps*A, H_ii_steps*B; zeros(size(Hu, 1), n), Hu], 'b', [h_ii_steps;hu]);
@@ -31,7 +31,7 @@ function [H_nsteps, h_nsteps , Np] = controllable_set(Hx, hx, Hu, hu, H_target, 
         h_ii_steps = [temp.b;hx];
 
         
-        disp("Fine Calcolo Passo " + ii )
+        disp("Fine Calcolo Passo " + i )
 
         temp = Polyhedron( 'A' , H_ii_steps , 'b' ,h_ii_steps);
 
@@ -43,7 +43,7 @@ function [H_nsteps, h_nsteps , Np] = controllable_set(Hx, hx, Hu, hu, H_target, 
     disp("Tempo impiegato: " + toc);
 
     temp = temp.minHRep();
-    Np = ii;
+    Np = i;
     H_nsteps = temp.A;
     h_nsteps = temp.b;
     

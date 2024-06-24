@@ -16,7 +16,7 @@ Ts = 60; % [secondi]
 inizializzazione
 
 %% Definizione delle matrici del costo quadratico
-Q = 1.e3*eye(6);
+Q = 1.e2*eye(6);
 R = 1e1*eye(3);
 % S come soluzione di Riccati
 [~ , S] = dlqr(sys_discretizzato.A , sys_discretizzato.B , Q , R); 
@@ -40,6 +40,9 @@ limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
 xlim(limitiTemp)
 ylim(limitiTemp)
 zlim(limitiTemp)
+xlabel("T1 $[ ^{\circ}C]$" , Interpreter="latex")
+ylabel("T2 $[ ^{\circ}C]$" , Interpreter="latex")
+zlabel("T3 $[ ^{\circ}C]$" , Interpreter="latex")
 
 subplot(1 , 2 , 2);
 CIS_G_Q.plot();
@@ -48,6 +51,9 @@ limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];
 xlim(limitiQ)
 ylim(limitiQ)
 zlim(limitiQ)
+xlabel("Q1 $[W]$" , Interpreter="latex")
+ylabel("Q2 $[W]$" , Interpreter="latex")
+zlabel("Q3 $[W]$" , Interpreter="latex")
 
 %% N-step controllable set
 
@@ -66,9 +72,9 @@ Np_steps_Q = projection(Np_step , 4:6);
 
 
 figure
-
+subplot(1 , 2 ,1)
 Np_steps_T.plot();
-title("Proiezione del dominio di attrazione delle temperature nelle stanze")
+title("Temperature nelle stanze")
 limitiTemp = [X_vinc_lin(7) X_vinc_lin(1)];
 xlim(limitiTemp)
 ylim(limitiTemp)
@@ -76,12 +82,15 @@ zlim(limitiTemp)
 trasparenzaFigura(trasp)
 hold on
 plot3(x0_centrato(1) ,x0_centrato(2), x0_centrato(3) , "." , MarkerSize=50)
+xlabel("T1 $[ ^{\circ}C]$" , Interpreter="latex")
+ylabel("T2 $[ ^{\circ}C]$" , Interpreter="latex")
+zlabel("T3 $[ ^{\circ}C]$" , Interpreter="latex")
 
-legend(["n-steps" , "Punto di partenza"])
+% legend(["n-steps" , "Punto di partenza"])
 
-figure
+subplot(1 , 2 ,2)
 Np_steps_Q.plot();
-title("Proiezione del dominio di attrazione della potenza termica dei termosifoni")
+title("Potenza termica dei termosifoni")
 limitiQ = [X_vinc_lin(10) X_vinc_lin(4)];
 xlim(limitiQ)
 ylim(limitiQ)
@@ -89,10 +98,17 @@ zlim(limitiQ)
 trasparenzaFigura(trasp)
 hold on
 plot3(x0_centrato(4) ,x0_centrato(5), x0_centrato(6) , "." , MarkerSize=50)
+xlabel("Q1 $[W]$" , Interpreter="latex")
+ylabel("Q2 $[W]$" , Interpreter="latex")
+zlabel("Q3 $[W]$" , Interpreter="latex")
 
-legend(["n-steps" , "Punto di partenza"])
+% legend(["n-steps" , "Punto di partenza"])
 
 %% Simulazione a tempo continuo con il controllo
+
+if ~exist("Np" , "var")
+    Np = 20;
+end
 
 htt=[];
 hxx = [];
