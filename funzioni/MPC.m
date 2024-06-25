@@ -1,7 +1,4 @@
-function [controlAction , flag] = MPC(x_attuale, sys, Q, R , S , Window, G, g, Vinc_X, Vinc_U)
-
-[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys.A , sys.B , Q , R , S , Window);
-
+function [controlAction , flag] = MPC(x_attuale, A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal, Window, G, g, Vinc_X, Vinc_U)
 
 
 %calcoliamo H

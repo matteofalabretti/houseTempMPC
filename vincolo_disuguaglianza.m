@@ -117,6 +117,9 @@ x_ini = [284 285 284 0 10 0]';
 flag = zeros(1 , Np);
 n_sim = 100;
 
+[A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal] = Calligrafica(sys_discretizzato.A , sys_discretizzato.B , Q , R , S , Np);
+
+
 for i = 1:n_sim
 
     if i == 1
@@ -125,7 +128,7 @@ for i = 1:n_sim
         x_run = hxx(: , end)-x_ref(1:6);
     end
 
-    [controlAction , flag(i)]= MPC(x_run, sys_discretizzato, Q, R , S , Np, G,g, X_vinc_lin, U_vinc_lin);
+    [controlAction , flag(i)]= MPC(x_run , A_cal , A_cal_n , B_cal , B_cal_n,  Q_cal , R_cal , Np, G,g, X_vinc_lin, U_vinc_lin);
     tempo = linspace(Ts*(i-1), Ts*i , Ts);
     controlAction = controlAction(1:3) + [100; 100; 100];
     u_online = [u_online,repmat(controlAction , 1 , Ts)];
