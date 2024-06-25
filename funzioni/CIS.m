@@ -15,7 +15,8 @@ K = -dlqr(A, B, Q, R);
 A_lqr = A + B * K;
 
 % Vincoli sullo stato e sull'ingresso (H*x <= h)
-% u := Hu(K(x - x_ref)+ u_ref) < hu
+% x >> Hx <= hx
+% u := Hu(K(x - x_ref) + u_ref) <= hu
 H = [Hx; Hu * K];
 h = [hx;hu + Hu*(K*x_ref - u_ref)]; 
 
@@ -30,13 +31,15 @@ while  primaIterazione || CIS_poly_prev ~= CIS_poly_curr
     primaIterazione = 0;
 
     %   Memorizza vecchio candidato
-    CIS_poly_prev = CIS_poly_curr;
+    CIS_poly_prev = Polyhedron(CIS_poly_curr.A , CIS_poly_curr.b);
     
     %   Calcola nuovo candidato (G_hat * x <= g_hat)
+    % x_next := Ax + Bu = Ax + B[K(x - x_ref) + u_ref ]
+    % >> Alqr * x - B(K * x_ref - u_ref)
     G_hat = [CIS_poly_curr.A * A_lqr;H];
     g_hat = [CIS_poly_curr.b + CIS_poly_curr.A * B * (K*x_ref - u_ref) ; h];
     CIS_poly_curr= Polyhedron(G_hat, g_hat);
-    CIS_poly_curr = CIS_poly_curr.minHRep();
+    CIS_poly_curr= CIS_poly_curr.minHRep();
 
     if mod(i , 20) == 0
         disp("Iterazione numero: " + i + " tempo trascorso: " + toc);
